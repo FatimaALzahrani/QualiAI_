@@ -7,9 +7,6 @@ from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
 from PyPDF2 import PdfReader
 import numpy as np
-# from sentence_transformers import SentenceTransformer
-# from llama_cpp import Llama
-import faiss
 import os, uuid
 
 app = Flask(__name__)
