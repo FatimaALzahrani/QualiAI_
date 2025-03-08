@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QualiAi - تحسين تقارير الدراسة الذاتية</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">QualiAi</div>
+        <ul>
+          <li><a href="#" class="btn">الرئيسية</a></li>
+          <li><a href="#services" class="btn">خدماتنا</a></li>
+          <li><a href="#about" class="btn">من نحن</a></li>
+          <li><a href="#contact" class="btn">تواصل معنا</a></li>
+          {% if session['user_id'] %}
+          <li>
+            <a href="{{ url_for('report') }}" class="btn">إنشاء التقرير</a>
+          </li>
+          <li>
+            <a href="{{ url_for('profile') }}" class="btn">ملفي الشخصي</a>
+          </li>
+          <li>
+            <a href="{{ url_for('logout') }}" class="btn">تسجيل الخروج</a>
+          </li>
+          {% else %}
+          <li><a href="{{ url_for('login') }}" class="btn">تسجيل الدخول</a></li>
+          <li>
+            <a href="{{ url_for('register') }}" class="btn">إنشاء حساب</a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+      <div class="hero">
+        <h1>أتمتة إعداد تقارير الدراسة الذاتية</h1>
+        <p>
+          قم بتحميل بياناتك، واترك لنا الباقي! مع QualiAi، نوفر لك تقريرًا
+          شاملاً بسرعة ودقة.
+        </p>
+        <a
+          href="{% if session['user_id'] %}{{ url_for('report') }}{% else %}{{ url_for('register') }}{% endif %}"
+          class="btn btn-primary"
+        >
+          ابدأ الآن
+        </a>
+      </div>
+    </header>
+
+    <section id="services">
+      <h2>خدماتنا</h2>
+      <div class="service-container">
+        <div class="service">
+          <h3>إعداد التقارير الذكية</h3>
+          <p>
+            نقوم بتحليل بياناتك وإنتاج تقرير احترافي بناءً على المعايير
+            الأكاديمية.
+          </p>
+        </div>
+        <div class="service">
+          <h3>تحليل البيانات</h3>
+          <p>تحليل متعمق للبيانات المدخلة وإخراج نتائج دقيقة تعكس الأداء.</p>
+        </div>
+        <div class="service">
+          <h3>تكامل مع Excel</h3>
+          <p>سهولة رفع ملفات إكسل واستخراج المعلومات منها لإنشاء التقارير.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <h2>من نحن</h2>
+      <p>
+        QualiAi هي منصة مبتكرة تهدف إلى مساعدة الجامعات في أتمتة إعداد تقارير
+        الدراسة الذاتية، مما يوفر الوقت والجهد مع ضمان دقة البيانات.
+      </p>
+    </section>
+
+    <section id="contact">
+      <h2>تواصل معنا</h2>
+      <p>
+        لأي استفسارات، لا تتردد في مراسلتنا عبر البريد الإلكتروني:
+        <strong>support@qualiai.com</strong>
+      </p>
+    </section>
+
+    <footer>
+      <p>جميع الحقوق محفوظة © 2025 QualiAi</p>
+    </footer>
+  </body>
+</html>

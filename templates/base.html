@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <title>منصة التقارير الذاتية</title>
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">QualiAi</div>
+        <ul>
+          <li><a href="{{ url_for('home') }}" class="btn">الرئيسية</a></li>
+          {% if session['user_id'] %}
+          <li>
+            <a href="#" class="btn">إنشاء التقرير</a>
+          </li>
+          <li>
+            <a href="{{ url_for('profile') }}" class="btn">ملفي الشخصي</a>
+          </li>
+          <li>
+            <a href="{{ url_for('logout') }}" class="btn">تسجيل الخروج</a>
+          </li>
+          {% else %}
+          <li><a href="{{ url_for('login') }}" class="btn">تسجيل الدخول</a></li>
+          <li>
+            <a href="{{ url_for('register') }}" class="btn">إنشاء حساب</a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </header>
+    <div class="container">{% block content %} {% endblock %}</div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        function populateTable(count, tableId, prefix) {
+          var tableBody = document
+            .getElementById(tableId)
+            .getElementsByTagName("tbody")[0];
+          tableBody.innerHTML = "";
+          for (var i = 1; i <= count; i++) {
+            var row = document.createElement("tr");
+
+            var cellNumber = document.createElement("td");
+            cellNumber.textContent = i;
+            row.appendChild(cellNumber);
+
+            var cellName = document.createElement("td");
+            var inputName = document.createElement("input");
+            inputName.type = "text";
+            inputName.name = prefix + "_name_" + i;
+            inputName.className = "form-control";
+            cellName.appendChild(inputName);
+            row.appendChild(cellName);
+
+            var cellHours = document.createElement("td");
+            var inputHours = document.createElement("input");
+            inputHours.type = "number";
+            inputHours.name = prefix + "_hours_" + i;
+            inputHours.className = "form-control";
+            inputHours.min = "0";
+            cellHours.appendChild(inputHours);
+            row.appendChild(cellHours);
+
+            tableBody.appendChild(row);
+          }
+        }
+
+        var tracksInput = document.getElementById("program_tracks_count");
+        tracksInput.addEventListener("change", function () {
+          var count = parseInt(this.value) || 1;
+          populateTable(count, "tracksTable", "track");
+        });
+        populateTable(parseInt(tracksInput.value) || 1, "tracksTable", "track");
+
+        var qualInput = document.getElementById("program_qualification_count");
+        qualInput.addEventListener("change", function () {
+          var count = parseInt(this.value) || 1;
+          populateTable(count, "qualificationTable", "qualification");
+        });
+        populateTable(
+          parseInt(qualInput.value) || 1,
+          "qualificationTable",
+          "qualification"
+        );
+      });
+    </script>
+  </body>
+</html>

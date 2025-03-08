@@ -1,0 +1,557 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-5" dir="rtl">
+  <!-- شريط خطوات التقدم -->
+  <div
+    class="steps-horizontal mb-4 d-flex align-items-center justify-content-between"
+  >
+    {% set labels = ["المعلومات الأساسية", "ملف البرنامج", "الدراسة الذاتية
+    للبرنامج", "التقويم الذاتي وفق معايير الاعتماد"] %} {% for step in range(1,
+    total_steps + 1) %}
+    <div class="step-horizontal text-center">
+      <div
+        class="step-icon mb-2"
+        style="color:{% if step <= step_number %}#fff{% else %}#000{% endif %};;background: {% if step < step_number %}#377E47{% elif step == step_number %}#000C7B{% else %}#ccc{% endif %};"
+      >
+        {% if step < step_number %}
+        <i class="fas fa-check"></i>
+        {% else %} {{ step }} {% endif %}
+      </div>
+      <div
+        class="step-title"
+        style="color: {% if step < step_number %}#377E47{% elif step == step_number %}#000C7B{% else %}#666{% endif %};"
+      >
+        {{ step }}: {{ labels[step-1] }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <!-- 
+  {% if step_number == total_steps %}
+  عرض النقاط التفصيلية عند الخطوة الرابعة 
+  <div class="mb-4 text-center">
+    <ul
+      class="list-inline"
+      style="
+        list-style-type: disc;
+        display: inline-block;
+        text-align: right;
+        padding-right: 20px;
+        font-size: 16px;
+        color: #007bff;
+      "
+    >
+      <li>تقييم الأداء العام</li>
+      <li>إبراز نقاط القوة</li>
+      <li>تحديد مجالات التحسين</li>
+    </ul>
+  </div>
+  {% endif %}-->
+
+  <!-- حاوية النموذج -->
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">
+        {% if step_number == 1 %} المعلومات الأساسية {% elif step_number == 2 %}
+        ملف البرنامج {% elif step_number == 3 %} الدراسة الذاتية للبرنامج {%
+        elif step_number == 4 %} التقويم الذاتي وفق معايير الاعتماد {% endif %}
+      </h4>
+    </div>
+    <div class="card-body">
+      <form method="POST" enctype="multipart/form-data">
+        {% if step_number == 1 %}
+
+        <!-- بيانات المؤسسة والاتصال -->
+        <div class="form-group">
+          <label for="title">عنوان التقرير</label>
+          <input
+            type="text"
+            class="form-control"
+            id="title"
+            name="title"
+            required
+            value="{{ data.get('title', '') }}"
+          />
+        </div>
+        <div class="form-group">
+          <label for="institution">المؤسسة</label>
+          <input
+            type="text"
+            class="form-control"
+            id="institution"
+            name="institution"
+            required
+            value="{{ data.get('institution', '') }}"
+          />
+        </div>
+        <div class="form-group">
+          <label for="college">الكلية</label>
+          <input
+            type="text"
+            class="form-control"
+            id="college"
+            name="college"
+            required
+            value="{{ data.get('college', '') }}"
+          />
+        </div>
+        <div class="form-group">
+          <label for="department">القسم العلمي</label>
+          <input
+            type="text"
+            class="form-control"
+            id="department"
+            name="department"
+            required
+            value="{{ data.get('department', '') }}"
+          />
+        </div>
+        <div class="form-group">
+          <label for="program">البرنامج</label>
+          <input
+            type="text"
+            class="form-control"
+            id="program"
+            name="program"
+            required
+            value="{{ data.get('program', '') }}"
+          />
+        </div>
+        <div class="form-group">
+          <label for="reportDate">تاريخ إعداد التقرير</label>
+          <input
+            type="date"
+            class="form-control"
+            id="reportDate"
+            name="reportDate"
+            required
+            value="{{ data.get('reportDate', '') }}"
+          />
+        </div>
+        <hr />
+        <!-- بيانات التواصل -->
+        <h3>بيانات التواصل</h3>
+        <div class="form-group">
+          <label for="contactName">الاسم</label>
+          <input
+            type="text"
+            class="form-control"
+            id="contactName"
+            name="contactName"
+            required
+            value="{{ data.get('contactName', '') }}"
+          />
+        </div>
+        <div class="form-group">
+          <label for="position">المنصب</label>
+          <input
+            type="text"
+            class="form-control"
+            id="position"
+            name="position"
+            required
+            value="{{ data.get('position', '') }}"
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">البريد الإلكتروني</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            required
+            value="{{ data.get('email', '') }}"
+          />
+        </div>
+        <div class="form-group">
+          <label for="phone">الهاتف الجوال</label>
+          <input
+            type="tel"
+            class="form-control"
+            id="phone"
+            name="phone"
+            required
+            value="{{ data.get('phone', '') }}"
+          />
+        </div>
+
+        {% elif step_number == 2 %}
+        <!-- ملف البرنامج -->
+        <div class="card-body">
+          <!-- قسم المعلومات العامة للبرنامج -->
+          <h3 class="card-title">المعلومات العامة للبرنامج</h3>
+          <div class="form-group">
+            <label for="program_message">رسالة البرنامج</label>
+            <textarea
+              class="form-control"
+              id="program_message"
+              name="program_message"
+              rows="2"
+              required
+            >
+{{ data.get('program_message', '') }}</textarea
+            >
+          </div>
+          <div class="form-group">
+            <label for="program_objectives">أهداف البرنامج</label>
+            <textarea
+              class="form-control"
+              id="program_objectives"
+              name="program_objectives"
+              rows="2"
+              required
+            >
+{{ data.get('program_objectives', '') }}</textarea
+            >
+          </div>
+          <div class="form-group">
+            <label for="program_achievements">إنجازات البرنامج والجوائز</label>
+            <textarea
+              class="form-control"
+              id="program_achievements"
+              name="program_achievements"
+              rows="2"
+              required
+            >
+{{ data.get('program_achievements', '') }}</textarea
+            >
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="program_hours">إجمالي الساعات المعتمدة</label>
+              <input
+                type="number"
+                class="form-control"
+                id="program_hours"
+                name="program_hours"
+                required
+                value="{{ data.get('program_hours', '') }}"
+              />
+            </div>
+            <div class="form-group col-md-4">
+              <label for="program_tracks_count"
+                >عدد المسارات الرئيسية للبرنامج</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="program_tracks_count"
+                name="program_tracks_count"
+                min="1"
+                value="1"
+                required
+              />
+            </div>
+            <div class="form-group col-md-8">
+              <label>تفاصيل المسارات الرئيسية للبرنامج</label>
+              <table class="table table-bordered" id="tracksTable">
+                <thead>
+                  <tr>
+                    <th>رقم المسار</th>
+                    <th>اسم المسار</th>
+                    <th>إجمالي الساعات المعتمدة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- سيتم توليد الصفوف عبر JavaScript -->
+                </tbody>
+              </table>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="program_qualification_count"
+                >عدد نقاط الخروج / المؤهل الممنوح</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="program_qualification_count"
+                name="program_qualification_count"
+                min="1"
+                value="1"
+                required
+              />
+            </div>
+            <div class="form-group col-md-8">
+              <label>تفاصيل المؤهل الممنوح / نقاط الخروج</label>
+              <table class="table table-bordered" id="qualificationTable">
+                <thead>
+                  <tr>
+                    <th>رقم نقطة الخروج</th>
+                    <th>اسم النقطة</th>
+                    <th>إجمالي الساعات المعتمدة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- سيتم توليد الصفوف عبر JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="program_progress">الفروع التي يقدمها البرنامج</label>
+            <textarea
+              class="form-control"
+              id="program_progress"
+              name="program_progress"
+              rows="2"
+              required
+            >
+{{ data.get('program_progress', '') }}</textarea
+            >
+          </div>
+          <hr />
+          <h3 class="card-title">البيانات الإحصائية للبرنامج الأكاديمي</h3>
+          <div class="form-group">
+            <label for="excel_students">تحميل جدول أعداد الطلاب</label>
+            <a
+              href="{{ url_for('static', filename='templates/template_students.xlsx') }}"
+              target="_blank"
+              class="btn btn-link"
+              >تحميل المثال</a
+            >
+            <input
+              type="file"
+              class="form-control-file"
+              id="excel_students"
+              name="excel_students"
+              accept=".xlsx,.xls"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="excel_enrollment">تحميل جدول إحصائيات الملتحقين</label>
+            <a
+              href="{{ url_for('static', filename='templates/template_enrollment.xlsx') }}"
+              target="_blank"
+              class="btn btn-link"
+              >تحميل المثال</a
+            >
+            <input
+              type="file"
+              class="form-control-file"
+              id="excel_enrollment"
+              name="excel_enrollment"
+              accept=".xlsx,.xls"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="excel_graduates">تحميل جدول أعداد الخريجين</label>
+            <a
+              href="{{ url_for('static', filename='templates/template_graduates.xlsx') }}"
+              target="_blank"
+              class="btn btn-link"
+              >تحميل المثال</a
+            >
+            <input
+              type="file"
+              class="form-control-file"
+              id="excel_graduates"
+              name="excel_graduates"
+              accept=".xlsx,.xls"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="excel_additional">تحميل جدول هيئة التدريس</label>
+            <a
+              href="{{ url_for('static', filename='templates/template_faculty.xlsx') }}"
+              target="_blank"
+              class="btn btn-link"
+              >تحميل المثال</a
+            >
+            <input
+              type="file"
+              class="form-control-file"
+              id="excel_additional"
+              name="excel_additional"
+              accept=".xlsx,.xls"
+              required
+            />
+          </div>
+          <hr />
+        </div>
+        {% elif step_number == 3 %}
+        <!-- الدراسة الذاتية للبرنامج -->
+        <div class="card-body">
+          <!-- 2.1 جهات المقارنة وسبب اختيارها -->
+          <h3 class="card-title">
+            2.1 جهات المقارنة وسبب اختيارها (داخليًا أو خارجيًا)
+          </h3>
+          <div class="form-group">
+            <label for="comparison_file">رفع ملف جهات المقارنة</label>
+            <input
+              type="file"
+              class="form-control-file"
+              id="comparison_file"
+              name="comparison_file"
+              accept=".xlsx, .xls"
+              required
+            />
+            <a
+              href="{{ url_for('static', filename='templates/template_comparison.xlsx') }}"
+              target="_blank"
+              class="btn btn-link"
+              >تحميل نموذج جاهز</a
+            >
+          </div>
+          <!-- 2.2 ملخص مؤشرات الأداء الرئيسة والمقارنة المرجعية -->
+          <h3 class="card-title mt-4">
+            2.2 ملخص مؤشرات الأداء الرئيسة والمقارنة المرجعية
+          </h3>
+          <div class="form-group">
+            <label for="indicators_file">رفع ملف مؤشرات الأداء الرئيسة</label>
+            <input
+              type="file"
+              class="form-control-file"
+              id="indicators_file"
+              name="indicators_file"
+              accept=".xlsx, .xls"
+              required
+            />
+            <a
+              href="{{ url_for('static', filename='templates/template_indicators.xlsx') }}"
+              target="_blank"
+              class="btn btn-link"
+              >تحميل نموذج جاهز</a
+            >
+          </div>
+        </div>
+        {% elif step_number == 4 %}
+        <div class="stepper-container">
+          <div class="steps">
+            {% for standard_title, required_files in standards_files.items() %}
+            <div
+              class="step {% if not loop.first %}minimized{% endif %}"
+              data-step="{{ loop.index }}"
+            >
+              <div class="step-header">
+                <div class="step-marker">{{ loop.index }}</div>
+                <div class="step-info">
+                  <h3 class="step-name">{{ standard_title }}</h3>
+                </div>
+              </div>
+              <div class="step-content">
+                <p class="content-title">📋 الملفات المطلوبة:</p>
+                <ul class="content-list">
+                  {% for f in required_files %}
+                  <li>{{ f }}</li>
+                  {% endfor %}
+                </ul>
+                <div class="form-group">
+                  <label for="files_{{ loop.index }}">📂 تحميل الملفات:</label>
+                  <input
+                    type="file"
+                    class="form-control-file"
+                    id="files_{{ loop.index }}"
+                    name="files_{{ loop.index }}"
+                    multiple
+                  />
+                  <small class="form-text"
+                    >يمكن رفع أكثر من ملف (PDF، Excel، Word، إلخ). الحد الأقصى
+                    10 ملفات.</small
+                  >
+                </div>
+
+                <div class="step-controls">
+                  {% if loop.index > 1 %}
+                  <button
+                    type="button"
+                    class="btn prev-btn"
+                    onclick="toggleStep({{ loop.index }}, 'prev')"
+                  >
+                    السابق
+                  </button>
+                  {% endif %} {% if loop.index < standards_files|length %}
+                  <button
+                    type="button"
+                    class="btn next-btn"
+                    onclick="toggleStep({{ loop.index }}, 'next')"
+                  >
+                    التالي
+                  </button>
+                  {% else %}
+                  <button
+                    type="button"
+                    class="btn close-btn"
+                    onclick="toggleStep({{ loop.index }}, 'close')"
+                  >
+                    إغلاق
+                  </button>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script>
+          // استخدام jQuery للتأثيرات
+          $(document).ready(function () {
+            // عند الضغط على زر "التالي" أو "السابق"
+            window.toggleStep = function (currentIndex, action) {
+              let currentStep = $('.step[data-step="' + currentIndex + '"]');
+              let targetStep;
+              if (action === "next") {
+                targetStep = currentStep.next(".step");
+              } else if (action === "prev") {
+                targetStep = currentStep.prev(".step");
+              } else if (action === "close") {
+                // عند الضغط على إغلاق، فقط يتم طي الخطوة الحالية
+                currentStep.find(".step-content").slideUp(300, function () {
+                  $(this).addClass("minimized");
+                });
+                return;
+              }
+              if (targetStep.length) {
+                // طي الخطوة الحالية ثم فتح الهدف
+                currentStep.find(".step-content").slideUp(300, function () {
+                  $(this).addClass("minimized");
+                  targetStep.find(".step-content").slideDown(300, function () {
+                    $(this).removeClass("minimized");
+                  });
+                });
+              }
+            };
+
+            // النقر على الرأس لفتح الخطوة إذا كانت مغلقة
+            $(".step-header").on("click", function () {
+              let step = $(this).closest(".step");
+              if (step.hasClass("minimized")) {
+                // إغلاق أي خطوة مفتوحة أخرى\n        $('.step-content').slideUp(300).addClass('minimized');
+                step.find(".step-content").slideDown(300, function () {
+                  $(this).removeClass("minimized");
+                });
+              }
+            });
+          });
+        </script>
+        {% endif %}
+
+        <!-- عناصر التنقل بين الخطوات -->
+        <div class="form-navigation mt-4 clearfix">
+          <div class="float-right">
+            {% if step_number > 1 %}
+            <a
+              href="{{ url_for('step', step_number=step_number-1) }}"
+              class="btn btn-secondary"
+              ><i class="fas fa-arrow-right"></i> السابق</a
+            >
+            {% endif %}
+          </div>
+          <div class="float-left">
+            <button type="submit" class="btn btn-primary">
+              {% if step_number < total_steps %} التالي
+              <i class="fas fa-arrow-left"></i> {% else %} إنهاء وتوليد التقرير
+              <i class="fas fa-file-pdf"></i>
+              {% endif %}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% endblock %}
+</div>

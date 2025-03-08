@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <title>تم إنشاء التقرير</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h2>تم إنشاء التقرير بنجاح!</h2>
+      <p>يمكنك مشاركة التقرير عبر الرابط التالي:</p>
+      <a href="{{ shareable_link }}" target="_blank">{{ shareable_link }}</a>
+    </div>
+  </body>
+</html>

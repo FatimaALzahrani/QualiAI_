@@ -1,0 +1,9 @@
+flask==3.0.2
+werkzeug==3.0.1
+PyPDF2==3.0.1
+# sentence-transformers==2.6.1
+faiss-cpu==1.8.0
+numpy==1.26.4
+firebase_admin
+pandas
+fpdf
