@@ -3,7 +3,6 @@ import firebase_admin
 from firebase_admin import credentials, auth, firestore
 import pandas as pd
 from fpdf import FPDF
-from transformers import pipeline, GPT2LMHeadModel, GPT2Tokenizer
 from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
 from PyPDF2 import PdfReader
