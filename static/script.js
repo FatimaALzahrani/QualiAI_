@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return re.test(email);
   }
 
-  // التحقق من نموذج تسجيل الدخول
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
     loginForm.addEventListener("submit", function (event) {

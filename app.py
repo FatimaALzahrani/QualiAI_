@@ -12,9 +12,10 @@ import os, uuid
 app = Flask(__name__)
 app.secret_key = 'AIzaSyAr1hQK-pqmDlStxEScGJsXeLd3ZxabdhQ'
 
-cred = credentials.Certificate("credentials.json")
+cred = credentials.Certificate("credential.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+print("✅ Firebase Initialized Successfully!")
 
 UPLOAD_FOLDER = 'uploads'
 REPORTS_FOLDER = 'reports'
