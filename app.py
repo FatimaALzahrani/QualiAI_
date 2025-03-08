@@ -11,7 +11,6 @@ import numpy as np
 # from llama_cpp import Llama
 import faiss
 import os, uuid
-import uuid
 
 app = Flask(__name__)
 app.secret_key = 'AIzaSyAr1hQK-pqmDlStxEScGJsXeLd3ZxabdhQ'
