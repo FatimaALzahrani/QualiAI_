@@ -6,20 +6,27 @@
     <title>إنشاء حساب - QualiAi</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='styles.css') }}"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/login.css') }}"
     />
     <link
       href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap"
       rel="stylesheet"
     />
-    <script defer src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
   </head>
   <body>
     <div class="login-container">
       <div class="login-box">
         <div class="logo">
           <img
-            src="{{ url_for('static', filename='logo.png') }}"
+            src="{{ url_for('static', filename='logo2.png') }}"
             alt="QualiAi Logo"
           />
         </div>
@@ -43,6 +50,28 @@
               id="email"
               name="email"
               placeholder="أدخل بريدك الإلكتروني"
+              required
+            />
+          </div>
+
+          <div class="input-group phone">
+            <label for="phone">رقم الهاتف</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="أدخل رقم هاتفك"
+              required
+            />
+          </div>
+
+          <div class="input-group position">
+            <label for="position">المنصب الوظيفي</label>
+            <input
+              type="text"
+              id="position"
+              name="position"
+              placeholder="مثلاً: أستاذ، محاضر"
               required
             />
           </div>
@@ -77,5 +106,37 @@
         </form>
       </div>
     </div>
+
+    <script>
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          let formData = new FormData(this);
+
+          fetch("/register", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              Swal.fire({
+                title: data.message,
+                icon: data.type,
+              }).then(() => {
+                if (data.success) {
+                  window.location.href = "/";
+                }
+              });
+            })
+            .catch((err) => {
+              console.error(err);
+              Swal.fire({
+                title: "حدث خطأ أثناء إنشاء الحساب!",
+                icon: "error",
+              });
+            });
+        });
+    </script>
   </body>
 </html>

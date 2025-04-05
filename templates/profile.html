@@ -3,124 +3,137 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>الملف الشخصي</title>
+    <title>الملف الشخصي | QualiAI</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='profile.css') }}"
+      href="{{ url_for('static', filename='css/profile.css') }}"
     />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap"
       rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles.css') }}"
     />
   </head>
   <body>
     <header>
       <nav>
-        <div class="logo">QualiAi</div>
+        <div class="logo">QualiAI</div>
         <ul>
-          <li><a href="{{ url_for('home') }}" class="btn">الرئيسية</a></li>
+          <li><a href="{{ url_for('home') }}">الرئيسية</a></li>
           {% if session['user_id'] %}
+          <li><a href="{{ url_for('report') }}">إنشاء التقرير</a></li>
           <li>
-            <a href="#" class="btn">إنشاء التقرير</a>
+            <a href="{{ url_for('profile') }}" class="active">ملفي الشخصي</a>
           </li>
-          <li>
-            <a href="{{ url_for('profile') }}" class="btn">ملفي الشخصي</a>
-          </li>
-          <li>
-            <a href="{{ url_for('logout') }}" class="btn">تسجيل الخروج</a>
-          </li>
+          <li><a href="{{ url_for('logout') }}">تسجيل الخروج</a></li>
           {% else %}
-          <li><a href="{{ url_for('login') }}" class="btn">تسجيل الدخول</a></li>
-          <li>
-            <a href="{{ url_for('register') }}" class="btn">إنشاء حساب</a>
-          </li>
+          <li><a href="{{ url_for('login') }}">تسجيل الدخول</a></li>
+          <li><a href="{{ url_for('register') }}">إنشاء حساب</a></li>
           {% endif %}
         </ul>
       </nav>
     </header>
-    <div class="profile-container">
-      <div class="profile-header">
-        <h2>ملفي الشخصي</h2>
-        <button class="edit-btn" onclick="toggleEdit()">تعديل المعلومات</button>
-      </div>
 
-      <div class="profile-info">
-        <div class="info-item">
-          <strong>الاسم:</strong>
-          <span id="user-name">{{ user_data.get('name', 'غير محدد') }}</span>
+    <main class="profile-container">
+      <section class="profile-card">
+        <div class="profile-header">
+          <h2>الملف الشخصي</h2>
+          <button onclick="toggleEdit()" class="edit-btn">
+            <i class="fas fa-edit"></i> تعديل
+          </button>
         </div>
-        <div class="info-item">
-          <strong>البريد الإلكتروني:</strong>
-          <span id="user-email">{{ user_data.get('email', 'غير محدد') }}</span>
-        </div>
-        <div class="info-item">
-          <strong>رقم الهاتف:</strong>
-          <span id="user-phone">{{ user_data.get('phone', 'غير محدد') }}</span>
-        </div>
-      </div>
 
-      <form
-        id="edit-form"
-        class="edit-form"
-        method="POST"
-        action="/update_profile"
-      >
-        <h3>تعديل المعلومات الشخصية</h3>
-        <input
-          type="text"
-          name="name"
-          placeholder="الاسم"
-          value="{{ user_data.get('name', '') }}"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="البريد الإلكتروني"
-          value="{{ user_data.get('email', '') }}"
-        />
-        <input
-          type="tel"
-          name="phone"
-          placeholder="رقم الهاتف"
-          value="{{ user_data.get('phone', '') }}"
-        />
-        <button type="submit">حفظ التعديلات</button>
-        <button type="button" onclick="toggleEdit()">إلغاء</button>
-      </form>
-
-      <h3 class="section-title">تقاريري</h3>
-      <div class="reports-container">
-        {% if user_reports %} {% for report in user_reports %}
-        <div class="report-card">
-          <h4>تقرير: {{ report.get('title', 'تقرير بدون عنوان') }}</h4>
-          <p>
-            تاريخ الإنشاء: {{ report.get('created_at').strftime('%Y-%m-%d') }}
-          </p>
-          <a
-            href="{{ report.get('shareable_link') }}"
-            class="view-btn"
-            target="_blank"
-            >عرض التقرير</a
-          >
+        <div class="profile-info">
+          <div class="info-item">
+            <i class="fas fa-user"></i>
+            <span>{{ user_data.get('username', 'غير محدد') }}</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-envelope"></i>
+            <span>{{ user_data.get('email', 'غير محدد') }}</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-phone"></i>
+            <span>{{ user_data.get('phone', 'غير محدد') }}</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-briefcase"></i>
+            <span>{{ user_data.get('position', 'غير محدد') }}</span>
+          </div>
         </div>
-        {% endfor %} {% else %}
-        <p>لا توجد تقارير حتى الآن.</p>
+
+        <form id="edit-form" method="POST" action="/update_profile">
+          <h3>تعديل المعلومات</h3>
+          <input
+            type="text"
+            name="username"
+            placeholder="الاسم"
+            value="{{ user_data.get('username', '') }}"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="البريد الإلكتروني"
+            value="{{ user_data.get('email', '') }}"
+            required
+          />
+          <input
+            type="tel"
+            name="phone"
+            placeholder="رقم الهاتف"
+            value="{{ user_data.get('phone', '') }}"
+          />
+          <input
+            type="text"
+            name="position"
+            placeholder="المنصب الوظيفي"
+            value="{{ user_data.get('position', '') }}"
+          />
+          <div class="form-buttons">
+            <button type="submit" class="save-btn">حفظ التعديلات</button>
+            <button type="button" class="cancel-btn" onclick="toggleEdit()">
+              إلغاء
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="reports-section">
+        <h3>تقاريري</h3>
+        {% if user_reports %}
+        <div class="reports-list">
+          {% for report in user_reports %}
+          <div class="report-card">
+            <h4>
+              {{ report.get('data').get('title', 'تقرير الدراسة الذاتية') }}
+            </h4>
+            <p>
+              تاريخ الإنشاء: {{ report.get('created_at').strftime('%Y-%m-%d') }}
+            </p>
+            <a
+              href="{{ report.get('shareable_link') }}"
+              target="_blank"
+              class="view-report"
+            >
+              عرض التقرير <i class="fas fa-arrow-left"></i>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="no-reports">لا توجد تقارير حتى الآن.</p>
         {% endif %}
-      </div>
-    </div>
+      </section>
+    </main>
 
     <script>
       function toggleEdit() {
         const form = document.getElementById("edit-form");
-        form.style.display = form.style.display === "none" ? "block" : "none";
+        form.classList.toggle("active");
       }
     </script>
   </body>

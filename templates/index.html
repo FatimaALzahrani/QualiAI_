@@ -6,12 +6,17 @@
     <title>QualiAi - تحسين تقارير الدراسة الذاتية</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='styles.css') }}"
+      href="{{ url_for('static', filename='css/styles.css') }}"
     />
     <link
       href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <header>
@@ -50,7 +55,7 @@
           href="{% if session['user_id'] %}{{ url_for('report') }}{% else %}{{ url_for('register') }}{% endif %}"
           class="btn btn-primary"
         >
-          ابدأ الآن
+          <i class="fas fa-rocket"></i> ابدأ الآن
         </a>
       </div>
     </header>
@@ -59,6 +64,7 @@
       <h2>خدماتنا</h2>
       <div class="service-container">
         <div class="service">
+          <i class="fas fa-chart-line service-icon"></i>
           <h3>إعداد التقارير الذكية</h3>
           <p>
             نقوم بتحليل بياناتك وإنتاج تقرير احترافي بناءً على المعايير
@@ -66,34 +72,365 @@
           </p>
         </div>
         <div class="service">
+          <i class="fas fa-database service-icon"></i>
           <h3>تحليل البيانات</h3>
           <p>تحليل متعمق للبيانات المدخلة وإخراج نتائج دقيقة تعكس الأداء.</p>
         </div>
         <div class="service">
+          <i class="fas fa-file-excel service-icon"></i>
           <h3>تكامل مع Excel</h3>
           <p>سهولة رفع ملفات إكسل واستخراج المعلومات منها لإنشاء التقارير.</p>
+        </div>
+        <div class="service">
+          <i class="fas fa-check-circle service-icon"></i>
+          <h3>التحقق التلقائي من الجودة</h3>
+          <p>
+            يتم التحقق من جودة التقارير وكشف الأخطاء المحتملة لضمان مطابقة
+            المعايير الأكاديمية.
+          </p>
+        </div>
+        <div class="service">
+          <i class="fas fa-robot service-icon"></i>
+          <h3>توليد تقارير مخصصة بالذكاء الاصطناعي</h3>
+          <p>
+            أنشئ تقارير دقيقة مخصصة لمؤسستك تلقائيًا بناءً على نوع البيانات
+            المدخلة.
+          </p>
         </div>
       </div>
     </section>
 
     <section id="about">
-      <h2>من نحن</h2>
-      <p>
-        QualiAi هي منصة مبتكرة تهدف إلى مساعدة الجامعات في أتمتة إعداد تقارير
-        الدراسة الذاتية، مما يوفر الوقت والجهد مع ضمان دقة البيانات.
-      </p>
+      <div class="about-container">
+        <div class="about-text">
+          <h2>من نحن</h2>
+          <p>
+            <strong>QualiAi</strong> هي منصة متقدمة تهدف إلى
+            <span class="highlight">أتمتة إعداد تقارير الدراسة الذاتية</span>
+            للجامعات، مما يساعد على
+            <span class="highlight">توفير الوقت والجهد</span>
+            مع ضمان أقصى درجات الدقة والاحترافية في تحليل البيانات.
+          </p>
+          <p>
+            تعتمد منصتنا على الذكاء الاصطناعي لتقديم حلول تحليلية مبتكرة تساعد
+            الجامعات على تحسين جودة تقاريرها الأكاديمية وتسهيل عملية إعدادها بما
+            يتماشى مع المعايير العالمية.
+          </p>
+        </div>
+        <div class="about-image">
+          <img
+            src="{{ url_for('static', filename='about.png') }}"
+            alt="حول QualiAi"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section id="why-us">
+      <h2>لماذا QualiAi؟</h2>
+      <div class="features">
+        <div class="feature">
+          <i class="fas fa-brain feature-icon"></i>
+          <h3>ذكاء اصطناعي متطور</h3>
+          <p>
+            نستخدم أحدث تقنيات الذكاء الاصطناعي لتحليل بياناتك وإنتاج تقارير
+            دقيقة.
+          </p>
+        </div>
+        <div class="feature">
+          <i class="fas fa-clock feature-icon"></i>
+          <h3>توفير الوقت والجهد</h3>
+          <p>وفر ساعات من العمل اليدوي عبر أتمتة عملية إعداد التقارير.</p>
+        </div>
+        <div class="feature">
+          <i class="fas fa-user-shield feature-icon"></i>
+          <h3>حماية وأمان البيانات</h3>
+          <p>بياناتك آمنة 100% مع معايير التشفير الحديثة.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews">
+      <h2>آراء مستخدمين QualiAI</h2>
+      <div id="reviews-container" class="reviews-grid"></div>
+      <button id="show-review-form-btn" class="btn">إضافة تقييم</button>
+    </section>
+
+    <section id="reviews_form" style="display: none">
+      <h3>إضافة تقييم</h3>
+      <div id="review-form" class="review-form">
+        <input type="text" id="reviewer-name" placeholder="اسمك" required />
+        <textarea
+          id="review-message"
+          placeholder="اكتب تقييمك هنا..."
+          required
+        ></textarea>
+        <div class="rating">
+          <span class="star" data-value="1">&#9733;</span>
+          <span class="star" data-value="2">&#9733;</span>
+          <span class="star" data-value="3">&#9733;</span>
+          <span class="star" data-value="4">&#9733;</span>
+          <span class="star" data-value="5">&#9733;</span>
+        </div>
+        <p id="rating-value">التقييم: 0 من 5</p>
+        <button type="button" onclick="submitReview()">إرسال التقييم</button>
+        <button
+          type="button"
+          id="cancel-review-btn"
+          class="btn"
+          style="background: #c0392b; margin-top: 1rem"
+        >
+          إلغاء
+        </button>
+      </div>
     </section>
 
     <section id="contact">
       <h2>تواصل معنا</h2>
       <p>
-        لأي استفسارات، لا تتردد في مراسلتنا عبر البريد الإلكتروني:
-        <strong>support@qualiai.com</strong>
+        لأي استفسارات أو ملاحظات، لا تتردد في مراسلتنا عبر البريد الإلكتروني أو
+        ملء النموذج أدناه.
       </p>
+      <div class="contact-container">
+        <div class="contact-info">
+          <p>
+            <i class="fas fa-envelope"></i> البريد الإلكتروني:
+            <strong>support@qualiai.com</strong>
+          </p>
+          <p><i class="fas fa-phone-alt"></i> الهاتف: +966 558 699 756</p>
+          <p>
+            <i class="fas fa-map-marker-alt"></i> العنوان: الباحة، المملكة
+            العربية السعودية
+          </p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+        <form class="contact-form" id="contact-form">
+          <input
+            type="text"
+            name="name"
+            id="contact-name"
+            placeholder="الاسم"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            id="contact-email"
+            placeholder="البريد الإلكتروني"
+            required
+          />
+          <textarea
+            name="message"
+            id="contact-message"
+            placeholder="اكتب رسالتك هنا..."
+            required
+          ></textarea>
+          <button type="button" onclick="sendMail()">إرسال</button>
+        </form>
+      </div>
     </section>
 
     <footer>
       <p>جميع الحقوق محفوظة © 2025 QualiAi</p>
     </footer>
   </body>
+  <script
+    src="https://kit.fontawesome.com/d5c6986420.js"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
+  ></script>
+  <script
+    src="https://code.jquery.com/jquery-3.7.1.js"
+    crossorigin="anonymous"
+  ></script>
+  <script type="text/javascript">
+    (function () {
+      emailjs.init("rkp2J2Vy2ZPF872OW");
+    })();
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-auth.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyABMZmTlio-nZ8sLJPSlDmB82mMD9Orb4M",
+      authDomain: "qualiai.firebaseapp.com",
+      databaseURL: "https://qualiai-default-rtdb.firebaseio.com",
+      projectId: "qualiai",
+      storageBucket: "qualiai.firebasestorage.app",
+      messagingSenderId: "459686234007",
+      appId: "1:459686234007:web:8f0448af3375e88b5766d2",
+      measurementId: "G-SPXSG1QWV4",
+    };
+    firebase.initializeApp(firebaseConfig);
+    var db = firebase.firestore();
+  </script>
+  <script>
+    let selectedRating = 0;
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const stars = document.querySelectorAll(".star");
+      const ratingValue = document.getElementById("rating-value");
+
+      stars.forEach((star) => {
+        star.addEventListener("mouseover", function () {
+          let rating = this.getAttribute("data-value");
+          highlightStars(rating);
+        });
+
+        star.addEventListener("mouseout", function () {
+          highlightStars(selectedRating);
+        });
+
+        star.addEventListener("click", function () {
+          selectedRating = this.getAttribute("data-value");
+          ratingValue.textContent = `التقييم: ${selectedRating} من 5`;
+          highlightStars(selectedRating);
+        });
+      });
+
+      function highlightStars(rating) {
+        stars.forEach((star, index) => {
+          if (index < rating) {
+            star.classList.add("selected");
+          } else {
+            star.classList.remove("selected");
+          }
+        });
+      }
+
+      document
+        .getElementById("show-review-form-btn")
+        .addEventListener("click", function () {
+          document.getElementById("reviews_form").style.display = "block";
+          this.style.display = "none";
+        });
+
+      document
+        .getElementById("cancel-review-btn")
+        .addEventListener("click", function () {
+          document.getElementById("reviews_form").style.display = "none";
+          document.getElementById("show-review-form-btn").style.display =
+            "inline-block";
+        });
+    });
+
+    function submitReview() {
+      let name = document.getElementById("reviewer-name").value;
+      let message = document.getElementById("review-message").value;
+
+      if (!name || !message || selectedRating === 0) {
+        Swal.fire({
+          title: "❌ يرجى ملء جميع الحقول واختيار عدد النجوم!",
+          icon: "warning",
+        });
+        return;
+      }
+
+      db.collection("reviews")
+        .add({
+          name: name,
+          message: message,
+          rating: selectedRating,
+          date: new Date().toISOString(),
+        })
+        .then(() => {
+          Swal.fire({
+            title: "✅ تم إرسال تقييمك بنجاح!",
+            text: "شكراً لمشاركتك تقييمك معنا ❤️",
+            icon: "success",
+          });
+
+          document.getElementById("reviewer-name").value = "";
+          document.getElementById("review-message").value = "";
+          document
+            .querySelectorAll(".star")
+            .forEach((s) => s.classList.remove("selected"));
+          selectedRating = 0;
+          document.getElementById("rating-value").textContent =
+            "التقييم: 0 من 5";
+          loadReviews();
+
+          document.getElementById("reviews_form").style.display = "none";
+          document.getElementById("show-review-form-btn").style.display =
+            "inline-block";
+        })
+        .catch((error) => {
+          console.error("❌ خطأ في الإرسال:", error);
+          Swal.fire({
+            title: "❌ حدث خطأ أثناء إرسال التقييم!",
+            icon: "error",
+          });
+        });
+    }
+
+    function loadReviews() {
+      db.collection("reviews")
+        .orderBy("date", "desc")
+        .get()
+        .then((querySnapshot) => {
+          let reviewsContainer = document.getElementById("reviews-container");
+          reviewsContainer.innerHTML = "";
+          querySnapshot.forEach((doc) => {
+            let data = doc.data();
+            let stars = "★".repeat(data.rating) + "☆".repeat(5 - data.rating);
+            let reviewHTML = `
+              <div class="review">
+                <h4>${data.name}</h4>
+                <p>${data.message}</p>
+                <p class="rating-stars">${stars}</p>
+              </div>
+            `;
+            reviewsContainer.innerHTML += reviewHTML;
+          });
+        })
+        .catch((error) => {
+          console.error("❌ خطأ في جلب التقييمات:", error);
+        });
+    }
+
+    window.onload = loadReviews;
+
+    function sendMail() {
+      var params = {
+        name: document.getElementById("contact-name").value.trim(),
+        email: document.getElementById("contact-email").value.trim(),
+        message: document.getElementById("contact-message").value.trim(),
+      };
+
+      if (!params.name || !params.email || !params.message) {
+        Swal.fire({
+          title: "يرجى ملء جميع الحقول!",
+          icon: "warning",
+        });
+        return;
+      }
+
+      const serviceID = "service_82d8v83";
+      const templateID = "template_c47x3qu";
+
+      emailjs
+        .send(serviceID, templateID, params)
+        .then((res) => {
+          document.getElementById("contact-form").reset();
+          Swal.fire({
+            title: "تم إرسال رسالتك بنجاح!",
+            icon: "success",
+          });
+        })
+        .catch((err) => {
+          console.error("❌ EmailJS Error:", err);
+          Swal.fire({
+            title: "حدث خطأ أثناء الإرسال!",
+            icon: "error",
+          });
+        });
+    }
+  </script>
 </html>

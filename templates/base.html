@@ -14,7 +14,7 @@
     />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
+      href="{{ url_for('static', filename='css/report.css') }}"
     />
   </head>
   <body>
@@ -100,6 +100,54 @@
           "qualification"
         );
       });
+
+      function addRow() {
+        let table = document
+          .getElementById("comparisonTable")
+          .getElementsByTagName("tbody")[0];
+        let newRow = table.insertRow();
+        newRow.innerHTML = `
+            <td><input type="text" name="entity[]" placeholder="اسم الجهة" required></td>
+            <td><input type="text" name="reason[]" placeholder="سبب الاختيار" required></td>
+            <td><button type="button" class="removeRow" onclick="removeRow(this)">❌</button></td>
+        `;
+      }
+
+      function removeRow(button) {
+        let row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+      }
+
+      function addRowKpi() {
+        let table = document
+          .getElementById("kpiTable")
+          .getElementsByTagName("tbody")[0];
+        let newRow = table.insertRow();
+
+        newRow.innerHTML = `
+            <td></td>
+            <td><input type="text" name="indicator[]" required /></td>
+            <td><input type="number" name="actual[]" step="0.01" required /></td>
+            <td><input type="number" name="target[]" step="0.01" required /></td>
+            <td><input type="number" name="internal_ref[]" step="0.01" required /></td>
+            <td><input type="number" name="external_ref[]" step="0.01" /></td>
+            <td><button type="button" class="x" onclick="removeRowKpi(this)">❌</button></td>
+        `;
+        updateRowNumbers();
+      }
+
+      function removeRowKpi(button) {
+        let row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+        updateRowNumbers();
+      }
+
+      function updateRowNumbers() {
+        let rows = document.querySelectorAll("#kpiTable tbody tr");
+        rows.forEach((row, index) => {
+          row.cells[0].textContent = index + 1;
+        });
+      }
     </script>
   </body>
 </html>

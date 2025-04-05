@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تعديل تقرير الدراسة الذاتية</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/final_report.css') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <input
+        type="text"
+        id="institution"
+        name="institution"
+        value="{{ report.get('title', '') }}"
+      />
+    </header>
+    <nav>
+      <ul>
+        <li><a href="#intro">الرئيسية</a></li>
+        <li><a href="#table-of-contents">جدول المحتويات</a></li>
+        <li><a href="#self-study">الدراسة الذاتية</a></li>
+        <li><a href="#executive-summary">الملخص التنفيذي</a></li>
+        <li><a href="#program-file">ملف البرنامج</a></li>
+        <li><a href="#statistics">الإحصاءات والبيانات</a></li>
+        <li><a href="#evaluation">التقويم والمعايير</a></li>
+        <li><a href="#attachments">المرفقات والتوصيات</a></li>
+      </ul>
+    </nav>
+    <div class="container">
+      <form
+        method="POST"
+        action="{{ url_for('update_report', report_id=report_id) }}"
+      >
+        <!-- القسم الأول: الرئيسية -->
+        <section id="intro">
+          <h2>الرئيسية</h2>
+          <div
+            class="intro-content"
+            style="display: flex; flex-wrap: wrap; gap: 2rem"
+          >
+            <!-- البيانات الأساسية -->
+            <div class="institution-data" style="flex: 1; min-width: 250px">
+              <h3 style="color: var(--accent-color)">البيانات الأساسية</h3>
+              <label for="institution">المؤسسة:</label>
+              <input
+                type="text"
+                id="institution"
+                name="institution"
+                value="{{ report.get('institution', '') }}"
+              />
+
+              <label for="college">الكلية:</label>
+              <input
+                type="text"
+                id="college"
+                name="college"
+                value="{{ report.get('college', '') }}"
+              />
+
+              <label for="department">القسم العلمي:</label>
+              <input
+                type="text"
+                id="department"
+                name="department"
+                value="{{ report.get('department', '') }}"
+              />
+
+              <label for="program">البرنامج:</label>
+              <input
+                type="text"
+                id="program"
+                name="program"
+                value="{{ report.get('program', '') }}"
+              />
+
+              <label for="reportDate">تاريخ إعداد التقرير:</label>
+              <input
+                type="date"
+                id="reportDate"
+                name="reportDate"
+                value="{{ report.get('reportDate', '') }}"
+              />
+            </div>
+            <!-- بيانات التواصل -->
+            <div class="contact-data" style="flex: 1; min-width: 250px">
+              <h3 style="color: var(--accent-color)">بيانات التواصل</h3>
+              <label for="contactName">الاسم:</label>
+              <input
+                type="text"
+                id="contactName"
+                name="contactName"
+                value="{{ report.get('contactName', '') }}"
+              />
+
+              <label for="position">المنصب:</label>
+              <input
+                type="text"
+                id="position"
+                name="position"
+                value="{{ report.get('position', '') }}"
+              />
+
+              <label for="email">البريد الإلكتروني:</label>
+              <input
+                type="text"
+                id="email"
+                name="email"
+                value="{{ report.get('email', '') }}"
+              />
+
+              <label for="phone">الهاتف الجوال:</label>
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                value="{{ report.get('phone', '') }}"
+              />
+            </div>
+          </div>
+        </section>
+
+        <!-- القسم الثاني: الملخص التنفيذي -->
+        <section
+          id="executive-summary"
+          style="
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+          "
+        >
+          <h2>الملخص التنفيذي</h2>
+          <table
+            style="width: 100%; border-collapse: collapse; margin: 1.5rem 0"
+          >
+            <thead>
+              <tr style="background: #fafafa; border: 1px solid #ccc">
+                <th>م</th>
+                <th>المعيار</th>
+                <th>التقويم الإجمالي للمعيار</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in range(1, 7) %}
+              <tr style="border: 1px solid #ccc">
+                <td style="padding: 0.5rem; border: 1px solid #ccc">{{ i }}</td>
+                <td style="padding: 0.5rem; border: 1px solid #ccc">
+                  <input
+                    type="text"
+                    name="criterion_{{ i }}"
+                    value="{{ report.get('criterion_' ~ i, '') }}"
+                    style="border: none; background: transparent; width: 100%"
+                  />
+                </td>
+                <td style="padding: 0.5rem; border: 1px solid #ccc">
+                  <input
+                    type="text"
+                    name="evaluation_{{ i }}"
+                    value="{{ report.get('evaluation_' ~ i, '') }}"
+                    style="border: none; background: transparent; width: 100%"
+                  />
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <label for="final_strengths">أبرز جوانب القوة:</label>
+          <textarea name="final_strengths" id="final_strengths" rows="3">
+{{ report.get('final_strengths', '') }}</textarea
+          >
+
+          <label for="final_improvements">أبرز جوانب التحسين:</label>
+          <textarea name="final_improvements" id="final_improvements" rows="3">
+{{ report.get('final_improvements', '') }}</textarea
+          >
+
+          <label for="final_recommendations">التوصيات التنفيذية:</label>
+          <textarea
+            name="final_recommendations"
+            id="final_recommendations"
+            rows="3"
+          >
+{{ report.get('final_recommendations', '') }}</textarea
+          >
+        </section>
+
+        <!-- القسم الثالث: ملف البرنامج -->
+        <section
+          id="program-file"
+          style="
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+          "
+        >
+          <h2>ملف البرنامج</h2>
+
+          <label for="program_message">رسالة البرنامج:</label>
+          <textarea name="program_message" id="program_message" rows="3">
+{{ report.get('program_message', '') }}</textarea
+          >
+
+          <label for="program_objectives">أهداف البرنامج:</label>
+          <textarea name="program_objectives" id="program_objectives" rows="3">
+{{ report.get('program_objectives', '') }}</textarea
+          >
+
+          <label for="program_achievements">الإنجازات والجوائز:</label>
+          <textarea
+            name="program_achievements"
+            id="program_achievements"
+            rows="3"
+          >
+{{ report.get('program_achievements', '') }}</textarea
+          >
+
+          <label for="program_hours">إجمالي الساعات المعتمدة:</label>
+          <input
+            type="number"
+            id="program_hours"
+            name="program_hours"
+            value="{{ report.get('program_hours', '') }}"
+          />
+
+          <label for="program_tracks">المسارات الرئيسة:</label>
+          <table id="tracksTable">
+            <thead>
+              <tr>
+                <th>اسم المسار</th>
+                <th>الساعات</th>
+                <th>عمليات</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for track in report.get('program_tracks', []) %}
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    name="track_name[]"
+                    value="{{ track.name }}"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="track_hours[]"
+                    value="{{ track.hours }}"
+                  />
+                </td>
+                <td><button type="button" class="removeRow">حذف</button></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <button type="button" id="addTrackRow">إضافة صف للمسارات</button>
+
+          <label for="program_qualification"
+            >المؤهل الممنوح / نقاط الخروج:</label
+          >
+          <table id="qualificationTable">
+            <thead>
+              <tr>
+                <th>اسم المؤهل</th>
+                <th>الساعات</th>
+                <th>عمليات</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for qual in report.get('program_qualification', []) %}
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    name="qual_name[]"
+                    value="{{ qual.name }}"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="qual_hours[]"
+                    value="{{ qual.hours }}"
+                  />
+                </td>
+                <td><button type="button" class="removeRow">حذف</button></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <button type="button" id="addQualRow">إضافة صف للمؤهل</button>
+
+          <input
+            type="hidden"
+            name="program_tracks"
+            id="program_tracks_hidden"
+            value=""
+          />
+          <input
+            type="hidden"
+            name="program_qualification"
+            id="program_qualification_hidden"
+            value=""
+          />
+
+          <label for="program_branches">الفروع التي يقدمها البرنامج:</label>
+          <textarea name="program_branches" id="program_branches" rows="3">
+{{ report.get('program_branches', '') }}</textarea
+          >
+        </section>
+        <section
+          id="statistics"
+          style="
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+          "
+        >
+          <h2
+            style="
+              border-left: 5px solid var(--accent-color, #e74c3c);
+              padding-left: 1rem;
+              color: var(--primary-color, #2c3e50);
+            "
+          >
+            8.1 البيانات الإحصائية للبرنامج الأكاديمي
+          </h2>
+
+          <div
+            class="card"
+            style="
+              margin-bottom: 1.5rem;
+              padding: 1rem;
+              background: #f9f9f9;
+              border: 1px solid #ccc;
+              border-radius: 8px;
+            "
+          >
+            <h3 style="color: var(--accent-color, #e74c3c)">
+              1.8.1 تطور أعداد الطلاب الملتحقين بالبرنامج
+            </h3>
+
+            <table class="tg">
+              <thead>
+                <tr>
+                  <th class="tg-jn3n" colspan="2">الطلاب</th>
+                  <th class="tg-jn3n">قبل عامين</th>
+                  <th class="tg-mus1">العام الماضي</th>
+                  <th class="tg-mus1">العام الحالي</th>
+                  <th class="tg-mus1">المُتوقع بعد عام</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for category, label in categories.items() %} {% set
+                table_data = report.get("students_table", {}).get(category, {})
+                %}
+                <tr>
+                  <td class="tg-jn3n" rowspan="3">{{ label }}</td>
+                  <td class="tg-5w3z">ذكور</td>
+                  {% for year in ["two_years", "last_year", "current_year",
+                  "next_year"] %}
+                  <td class="tg-c3ow">
+                    <input
+                      type="number"
+                      name="students_table[{{ category }}][male][{{ year }}]"
+                      value="{{ table_data.get('male', {}).get(year, '') }}"
+                      class="editable-input"
+                    />
+                  </td>
+                  {% endfor %}
+                </tr>
+                <tr>
+                  <td class="tg-5w3z">إناث</td>
+                  {% for year in ["two_years", "last_year", "current_year",
+                  "next_year"] %}
+                  <td class="tg-c3ow">
+                    <input
+                      type="number"
+                      name="students_table[{{ category }}][female][{{ year }}]"
+                      value="{{ table_data.get('female', {}).get(year, '') }}"
+                      class="editable-input"
+                    />
+                  </td>
+                  {% endfor %}
+                </tr>
+                <tr>
+                  <td class="tg-5w3z">الإجمالي</td>
+                  {% for year in ["two_years", "last_year", "current_year",
+                  "next_year"] %}
+                  <td class="tg-c3ow">
+                    <input
+                      type="number"
+                      name="students_table[{{ category }}][total][{{ year }}]"
+                      value="{{ table_data.get('total', {}).get(year, '') }}"
+                      class="editable-input"
+                    />
+                  </td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            class="card"
+            style="
+              margin-bottom: 1.5rem;
+              padding: 1rem;
+              background: #f9f9f9;
+              border: 1px solid #ccc;
+              border-radius: 8px;
+            "
+          >
+            <h3 style="color: var(--accent-color, #e74c3c)">
+              2.8.1 تصنيف الطلاب حسب نظام الدراسة (خلال العام الحالي)
+            </h3>
+            <table class="tg">
+              <thead>
+                <tr>
+                  <th class="tg-jn3n" colspan="2" rowspan="3">التصنيف</th>
+                  <th class="tg-74hf" colspan="7">عدد الطلاب</th>
+                </tr>
+                <tr>
+                  <th class="tg-0pky" colspan="3">سعودي</th>
+                  <th class="tg-0pky" colspan="3">غير سعودي</th>
+                  <th class="tg-0lax" rowspan="2">الإجمالي</th>
+                </tr>
+                <tr>
+                  <th class="tg-0pky">ذكور</th>
+                  <th class="tg-c3ow">إناث</th>
+                  <th class="tg-c3ow">الإجمالي</th>
+                  <th class="tg-0pky">ذكور</th>
+                  <th class="tg-c3ow">إناث</th>
+                  <th class="tg-c3ow">الإجمالي</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for study_mode, details in report.get("enrollment_data",
+                {}).items() %}
+                <tr>
+                  {% if loop.first %}
+                  <td
+                    class="tg-jn3n"
+                    rowspan="{{ report['enrollment_data'] | length }}"
+                  >
+                    نظام الدراسة
+                  </td>
+                  {% endif %}
+                  <td class="tg-5w3z">{{ study_mode }}</td>
+
+                  <td class="tg-0pky">
+                    <input
+                      type="number"
+                      name="enrollment_data[{{ study_mode }}][سعودي][male]"
+                      value="{{ details['سعودي']['male'] }}"
+                      oninput="updateTotal(this)"
+                      data-type="male"
+                      data-group="سعودي"
+                      data-study-mode="{{ study_mode }}"
+                    />
+                  </td>
+
+                  <td class="tg-c3ow">
+                    <input
+                      type="number"
+                      name="enrollment_data[{{ study_mode }}][سعودي][female]"
+                      value="{{ details['سعودي']['female'] }}"
+                      oninput="updateTotal(this)"
+                      data-type="female"
+                      data-group="سعودي"
+                      data-study-mode="{{ study_mode }}"
+                    />
+                  </td>
+
+                  <!-- سعودي - الإجمالي -->
+                  <td
+                    class="tg-c3ow total"
+                    data-group="سعودي"
+                    data-study-mode="{{ study_mode }}"
+                  >
+                    {{ details["سعودي"]["total"] }}
+                  </td>
+
+                  <!-- غير سعودي - ذكور -->
+                  <td class="tg-0pky">
+                    <input
+                      type="number"
+                      name="enrollment_data[{{ study_mode }}][غير سعودي][male]"
+                      value="{{ details['غير سعودي']['male'] }}"
+                      oninput="updateTotal(this)"
+                      data-type="male"
+                      data-group="غير سعودي"
+                      data-study-mode="{{ study_mode }}"
+                    />
+                  </td>
+
+                  <!-- غير سعودي - إناث -->
+                  <td class="tg-c3ow">
+                    <input
+                      type="number"
+                      name="enrollment_data[{{ study_mode }}][غير سعودي][female]"
+                      value="{{ details['غير سعودي']['female'] }}"
+                      oninput="updateTotal(this)"
+                      data-type="female"
+                      data-group="غير سعودي"
+                      data-study-mode="{{ study_mode }}"
+                    />
+                  </td>
+
+                  <!-- غير سعودي - الإجمالي -->
+                  <td
+                    class="tg-c3ow total"
+                    data-group="غير سعودي"
+                    data-study-mode="{{ study_mode }}"
+                  >
+                    {{ details["غير سعودي"]["total"] }}
+                  </td>
+
+                  <!-- الإجمالي العام -->
+                  <td
+                    class="tg-0lax grand-total"
+                    data-study-mode="{{ study_mode }}"
+                  >
+                    {{ details["الإجمالي"] }}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- أعداد خريجي البرنامج -->
+          <div
+            class="card"
+            style="
+              margin-bottom: 1.5rem;
+              padding: 1rem;
+              background: #f9f9f9;
+              border: 1px solid #ccc;
+              border-radius: 8px;
+            "
+          >
+            <h3 style="color: var(--accent-color, #e74c3c)">
+              3.8.1 تطور أعداد خريجي البرنامج
+            </h3>
+
+            {% set graduates_data = report.get("graduates_data", {}) %} {% set
+            graduates = graduates_data.get("graduates", {}) %} {% set employment
+            = graduates_data.get("employment", {}) %}
+
+            <table class="tg">
+              <thead>
+                <tr>
+                  <th class="tg-rk10">الخريجون</th>
+                  <th class="tg-jkj7" colspan="2">قبل ثلاثة أعوام</th>
+                  <th class="tg-58am" colspan="2">قبل عامين</th>
+                  <th class="tg-58am" colspan="2">العام الماضي</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="tg-aacx" colspan="7">أعداد الخريجين</td>
+                </tr>
+                <tr>
+                  <td class="tg-rk10">الطلاب</td>
+                  {% set col = ["قبل ثلاثة أعوام", "قبل عامين", "العام الماضي"]
+                  %} {% for year in col %}
+                  <td class="tg-fzdr" colspan="2">
+                    <input
+                      type="number"
+                      name="graduates_data[graduates][{{ year }}][male]"
+                      value="{{ graduates.get(year, {}).get('male', '') }}"
+                      oninput="updateTotal(this)"
+                      data-type="male"
+                      data-year="{{ year }}"
+                    />
+                  </td>
+                  {% endfor %}
+                </tr>
+                <tr>
+                  <td class="tg-rk10">الطالبات</td>
+                  {% for year in col %}
+                  <td class="tg-fzdr" colspan="2">
+                    <input
+                      type="number"
+                      name="graduates_data[graduates][{{ year }}][female]"
+                      value="{{ graduates.get(year, {}).get('female', '') }}"
+                      oninput="updateTotal(this)"
+                      data-type="female"
+                      data-year="{{ year }}"
+                    />
+                  </td>
+                  {% endfor %}
+                </tr>
+                <tr>
+                  <td class="tg-rk10">المجموع</td>
+                  {% for year in col %}
+                  <td
+                    class="tg-fzdr"
+                    colspan="2"
+                    class="total"
+                    data-year="{{ year }}"
+                  >
+                    {{ graduates.get(year, {}).get("total", "غير متوفر") }}
+                  </td>
+                  {% endfor %}
+                </tr>
+
+                <tr>
+                  <td class="tg-ixhm" colspan="7">توظيف الخريجين</td>
+                </tr>
+                <tr>
+                  <td class="tg-rk10">عدد الموظفين من خريجي البرنامج</td>
+                  {% for year in col %}
+                  <td class="tg-fzdr" colspan="2">
+                    <input
+                      type="number"
+                      name="graduates_data[employment][{{ year }}][employees]"
+                      value="{{ employment.get(year, {}).get('employees', '') }}"
+                      oninput="updateEmploymentRate(this)"
+                      data-year="{{ year }}"
+                    />
+                  </td>
+                  {% endfor %}
+                </tr>
+                <tr>
+                  <td class="tg-rk10">نسبة الموظفين إلى إجمالي الخريجين</td>
+                  {% for year in col %}
+                  <td
+                    class="tg-fzdr"
+                    colspan="2"
+                    class="employment-rate"
+                    data-year="{{ year }}"
+                  >
+                    {{ employment.get(year, {}).get("employment_rate", "غير
+                    متوفر") }}%
+                  </td>
+                  {% endfor %}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- أعداد هيئة التدريس -->
+          <div
+            class="card"
+            style="
+              margin-bottom: 1.5rem;
+              padding: 1rem;
+              background: #f9f9f9;
+              border: 1px solid #ccc;
+              border-radius: 8px;
+            "
+          >
+            <h3 style="color: var(--accent-color, #e74c3c)">
+              8.4.1 بيانات هيئة التدريس
+            </h3>
+
+            {% set categories = ["سعودي", "غير سعودي", "متوسط عبئ التدريس"] %}
+            {% set ranks = ["أستاذ", "أستاذ مشارك", "أستاذ مساعد", "الإجمالي"]
+            %}
+
+            <table class="tg">
+              <thead>
+                <tr>
+                  <th rowspan="2">هيئة التدريس</th>
+                  {% for category in categories %}
+                  <th colspan="3">{{ category }}</th>
+                  {% endfor %}
+                </tr>
+                <tr>
+                  {% for _ in categories %}
+                  <th>ذكور</th>
+                  <th>إناث</th>
+                  <th>الإجمالي</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for rank in ranks %}
+                <tr>
+                  <td>{{ rank }}</td>
+
+                  {% for category in categories %} {% set category_data =
+                  faculty_data.get(category, {}) %} {% set rank_data =
+                  category_data.get(rank, {}) %}
+
+                  <td>
+                    <input
+                      type="number"
+                      name="faculty[{{ category }}][{{ rank }}][male]"
+                      value="{{ rank_data.get('male', 0) }}"
+                      class="calc-total"
+                      data-target="{{ category }}_total_{{ loop.index }}"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="faculty[{{ category }}][{{ rank }}][female]"
+                      value="{{ rank_data.get('female', 0) }}"
+                      class="calc-total"
+                      data-target="{{ category }}_total_{{ loop.index }}"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      id="{{ category }}_total_{{ loop.index }}"
+                      name="faculty[{{ category }}][{{ rank }}][total]"
+                      value="{{ rank_data.get('total', 0) }}"
+                      class="total-field"
+                      readonly
+                    />
+                  </td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", function () {
+              document
+                .querySelectorAll(".calc-total")
+                .forEach(function (input) {
+                  input.addEventListener("input", function () {
+                    let row = this.closest("tr");
+                    let maleInput = row.querySelector(`[name*="[male]"]`);
+                    let femaleInput = row.querySelector(`[name*="[female]"]`);
+
+                    let male =
+                      maleInput && maleInput.value
+                        ? parseInt(maleInput.value) || 0
+                        : 0;
+                    let female =
+                      femaleInput && femaleInput.value
+                        ? parseInt(femaleInput.value) || 0
+                        : 0;
+
+                    let total = male + female;
+                    let targetId = this.getAttribute("data-target");
+                    if (targetId) {
+                      document.getElementById(targetId).value = total;
+                    }
+                  });
+                });
+            });
+          </script>
+
+          <!-- أعداد هيئة التدريس -->
+          <div
+            class="card"
+            style="
+              margin-bottom: 1.5rem;
+              padding: 1rem;
+              background: #f9f9f9;
+              border: 1px solid #ccc;
+              border-radius: 8px;
+            "
+          >
+            <h3 style="color: var(--accent-color, #e74c3c)">
+              5.8.1 تصنيف هيئة التدريس وفقًا لنظام الدراسة
+            </h3>
+            {% set ent = report.get("faculty_classify", {}).get("انتظام", {}) %}
+            {% set remotely = report.get("faculty_classify", {}).get("عن بعد",
+            {}) %} {% set full = "بدوام كامل" %} {% set part = "بدوام جزئي" %}
+            {% set equval = "ما يعادله" %}
+
+            <table class="tg">
+              <thead>
+                <tr>
+                  <th class="tg-rk10" rowspan="3">هيئة التدريس **</th>
+                  <th class="tg-rk10" colspan="3">انتظام</th>
+                  <th class="tg-rk10" colspan="3">عن بعد</th>
+                </tr>
+                <tr>
+                  <th class="tg-o5s1" rowspan="2">بدوام كامل</th>
+                  <th class="tg-o5s1" colspan="2">بدوام جزئي</th>
+                  <th class="tg-o5s1" rowspan="2">بدوام كامل</th>
+                  <th class="tg-o5s1" colspan="2">بدوام جزئي</th>
+                </tr>
+                <tr>
+                  <th class="tg-pnp8">العدد</th>
+                  <th class="tg-pnp8">ما يعادله بالدوام الكامل</th>
+                  <th class="tg-r7qn">العدد</th>
+                  <th class="tg-r7qn">ما يعادله بالدوام الكامل</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for gender, label in {"male": "ذكور", "female": "إناث",
+                "total": "الإجمالي"}.items() %}
+                <tr>
+                  <td class="tg-edmn">{{ label }}</td>
+
+                  <!-- انتظام - دوام كامل -->
+                  <td class="tg-fzdr">
+                    <input
+                      type="number"
+                      name="faculty_classify[انتظام][{{full}}][{{gender}}]"
+                      value="{{ ent.get(full, {}).get(gender, '') }}"
+                      class="total-field"
+                    />
+                  </td>
+
+                  <!-- انتظام - دوام جزئي -->
+                  <td class="tg-fzdr">
+                    <input
+                      type="number"
+                      name="faculty_classify[انتظام][{{part}}][العدد][{{gender}}]"
+                      value="{{ ent.get(part, {}).get('العدد', {}).get(gender, '') }}"
+                    />
+                  </td>
+                  <td class="tg-fzdr">
+                    <input
+                      type="number"
+                      name="faculty_classify[انتظام][{{part}}][{{equval}}][{{gender}}]"
+                      value="{{ ent.get(part, {}).get(equval, {}).get(gender, '') }}"
+                    />
+                  </td>
+
+                  <!-- عن بعد - دوام كامل -->
+                  <td class="tg-fzdr">
+                    <input
+                      type="number"
+                      name="faculty_classify[عن بعد][{{full}}][{{gender}}]"
+                      value="{{ remotely.get(full, {}).get(gender, '') }}"
+                      class="total-field"
+                    />
+                  </td>
+
+                  <!-- عن بعد - دوام جزئي -->
+                  <td class="tg-fzdr">
+                    <input
+                      type="number"
+                      name="faculty_classify[عن بعد][{{part}}][العدد][{{gender}}]"
+                      value="{{ remotely.get(part, {}).get('العدد', {}).get(gender, '') }}"
+                    />
+                  </td>
+                  <td class="tg-fzdr">
+                    <input
+                      type="number"
+                      name="faculty_classify[عن بعد][{{part}}][{{equval}}][{{gender}}]"
+                      value="{{ remotely.get(part, {}).get(equval, {}).get(gender, '') }}"
+                    />
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <div
+          style="
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+          "
+        >
+          <h3 style="color: var(--accent-color, #e74c3c)">
+            6.8.1 مناقشة البيانات الإحصائية
+          </h3>
+          <label for="strengths">أبرز جوانب القوة:</label>
+          <textarea name="strengths" id="strengths" rows="3">
+{% for recommendations in report.get('recommendations', '')['نقاط القوة'] %}{{ recommendations }}
+{% endfor %} </textarea
+          >
+          <label for="improvements">أبرز جوانب التحسين:</label>
+          <textarea name="improvements" id="improvements" rows="3">
+{% for recommendations in report.get('recommendations', '')['نقاط الضعف'] %}{{ recommendations }}
+{% endfor %} </textarea
+          >
+          <label for="recommendations">التوصيات التنفيذية:</label>
+          <textarea name="recommendations" id="recommendations" rows="3">
+{% for recommendations in report.get('recommendations', '')['مجالات التحسين'] %} {{ recommendations }}
+{% endfor %} </textarea
+          >
+        </div>
+
+        <section
+          id="self-study"
+          style="
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+          "
+        >
+          <h2
+            style="
+              border-left: 5px solid var(--accent-color, #e74c3c);
+              padding-left: 1rem;
+              color: var(--primary-color, #2c3e50);
+            "
+          >
+            2. الدراسة الذاتية للبرنامج
+          </h2>
+
+          <!-- 7.1 جهات المقارنة وسبب اختيارها -->
+          <div
+            class="card"
+            style="
+              margin-bottom: 1.5rem;
+              padding: 1rem;
+              background: #f9f9f9;
+              border: 1px solid #ccc;
+              border-radius: 8px;
+            "
+          >
+            <h3 style="color: var(--accent-color, #e74c3c)">
+              2.1 جهات المقارنة وسبب اختيارها
+            </h3>
+            <table id="comparisonTable">
+              <thead>
+                <tr>
+                  <th>م</th>
+                  <th>الجهة</th>
+                  <th>سبب الاختيار</th>
+                  <th>حذف</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for comp in report.comparison_entities %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>
+                    <input
+                      type="text"
+                      name="entity[]"
+                      value="{{ comp.entity }}"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="reason[]"
+                      value="{{ comp.reason }}"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="delete-btn"
+                      onclick="deleteRow(this)"
+                    >
+                      ❌
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <button type="button" class="button" onclick="addRowComparison()">
+              ➕ إضافة جهة
+            </button>
+          </div>
+
+          <!-- قسم ملخص مؤشرات الأداء الرئيسة -->
+          <div
+            class="card"
+            style="
+              margin-bottom: 1.5rem;
+              padding: 1rem;
+              background: #f9f9f9;
+              border: 1px solid #ccc;
+              border-radius: 8px;
+            "
+          >
+            <h3 style="color: var(--accent-color, #e74c3c)">
+              2.2 ملخص مؤشرات الأداء الرئيسة
+            </h3>
+            <table id="kpiTable">
+              <thead>
+                <tr>
+                  <th>م</th>
+                  <th width="25%">مؤشر الأداء</th>
+                  <th>مستوى الأداء الفعلي</th>
+                  <th>مستوى الأداء المستهدف</th>
+                  <th>مستوى الأداء المرجعي الداخلي</th>
+                  <th>مستوى الأداء المرجعي الخارجي (إن وجد)</th>
+                  <th>حذف</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for kpi in report.kpis %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>
+                    <input
+                      type="text"
+                      name="indicator[]"
+                      value="{{ kpi.indicator }}"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="actual[]"
+                      value="{{ kpi.actual }}"
+                      step="0.01"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="target[]"
+                      value="{{ kpi.target }}"
+                      step="0.01"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="internal_ref[]"
+                      value="{{ kpi.internal_ref }}"
+                      step="0.01"
+                      required
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="external_ref[]"
+                      value="{{ kpi.external_ref }}"
+                      step="0.01"
+                    />
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="delete-btn"
+                      onclick="deleteRow(this)"
+                    >
+                      ❌
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <button type="button" class="button" onclick="addRowKpi()">
+              ➕ إضافة مؤشر جديد
+            </button>
+          </div>
+        </section>
+        <script>
+          function addRowComparison() {
+            let table = document
+              .getElementById("comparisonTable")
+              .getElementsByTagName("tbody")[0];
+            let newRow = table.insertRow();
+            newRow.innerHTML = `
+                  <td></td>
+                  <td><input type="text" name="entity[]" placeholder="أدخل الجهة" required /></td>
+                  <td><input type="text" name="reason[]" placeholder="أدخل سبب الاختيار" required /></td>
+                  <td><button type="button" class="delete-btn" onclick="deleteRow(this)">❌</button></td>
+                `;
+            updateRowNumbers("comparisonTable");
+          }
+
+          function addRowKpi() {
+            let table = document
+              .getElementById("kpiTable")
+              .getElementsByTagName("tbody")[0];
+            let newRow = table.insertRow();
+            newRow.innerHTML = `
+                  <td></td>
+                  <td><input type="text" name="indicator[]" placeholder="أدخل مؤشر الأداء" required /></td>
+                  <td><input type="number" name="actual[]" placeholder="0.00" step="0.01" required /></td>
+                  <td><input type="number" name="target[]" placeholder="0.00" step="0.01" required /></td>
+                  <td><input type="number" name="internal_ref[]" placeholder="0.00" step="0.01" required /></td>
+                  <td><input type="number" name="external_ref[]" placeholder="0.00" step="0.01" /></td>
+                  <td><button type="button" class="delete-btn" onclick="deleteRow(this)">❌</button></td>
+                `;
+            updateRowNumbers("kpiTable");
+          }
+
+          function deleteRow(button) {
+            let row = button.parentElement.parentElement;
+            row.remove();
+            updateRowNumbers("comparisonTable");
+            updateRowNumbers("kpiTable");
+          }
+
+          function updateRowNumbers(tableId) {
+            let rows = document.querySelectorAll(`#${tableId} tbody tr`);
+            rows.forEach((row, index) => {
+              row.cells[0].textContent = index + 1;
+            });
+          }
+        </script>
+        <button type="submit">تحديث جميع الحقول</button>
+      </form>
+      <br />
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      document
+        .getElementById("addTrackRow")
+        .addEventListener("click", function () {
+          const table = document
+            .getElementById("tracksTable")
+            .getElementsByTagName("tbody")[0];
+          const row = table.insertRow();
+          let cell1 = row.insertCell(0);
+          cell1.innerHTML = '<input type="text" name="track_name[]" value="">';
+
+          let cell2 = row.insertCell(1);
+          cell2.innerHTML =
+            '<input type="number" name="track_hours[]" value="">';
+          let cell3 = row.insertCell(2);
+          cell3.innerHTML =
+            '<button type="button" class="removeRow">حذف</button>';
+        });
+
+      document
+        .getElementById("addQualRow")
+        .addEventListener("click", function () {
+          const table = document
+            .getElementById("qualificationTable")
+            .getElementsByTagName("tbody")[0];
+          const row = table.insertRow();
+          let cell1 = row.insertCell(0);
+          cell1.innerHTML = '<input type="text" name="qual_name[]" value="">';
+          let cell2 = row.insertCell(1);
+          cell2.innerHTML =
+            '<input type="number" name="qual_hours[]" value="">';
+          let cell3 = row.insertCell(2);
+          cell3.innerHTML =
+            '<button type="button" class="removeRow">حذف</button>';
+        });
+
+      document.addEventListener("click", function (e) {
+        if (e.target && e.target.classList.contains("removeRow")) {
+          const row = e.target.closest("tr");
+          row.parentNode.removeChild(row);
+        }
+      });
+
+      document.querySelector("form").addEventListener("submit", function (e) {
+        let tracks = [];
+        const trackRows = document.querySelectorAll("#tracksTable tbody tr");
+        trackRows.forEach(function (row) {
+          const name = row.querySelector('input[name="track_name[]"]').value;
+          const hours = row.querySelector('input[name="track_hours[]"]').value;
+          if (name.trim() !== "" || hours.trim() !== "") {
+            tracks.push({ name: name, hours: hours });
+          }
+        });
+        document.getElementById("program_tracks_hidden").value =
+          JSON.stringify(tracks);
+
+        let qualifications = [];
+        const qualRows = document.querySelectorAll(
+          "#qualificationTable tbody tr"
+        );
+        qualRows.forEach(function (row) {
+          const name = row.querySelector('input[name="qual_name[]"]').value;
+          const hours = row.querySelector('input[name="qual_hours[]"]').value;
+          if (name.trim() !== "" || hours.trim() !== "") {
+            qualifications.push({ name: name, hours: hours });
+          }
+        });
+        document.getElementById("program_qualification_hidden").value =
+          JSON.stringify(qualifications);
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        function updateTotal(input) {
+          let year = input.dataset.year;
+          let row = input.closest("tr").parentNode;
+
+          let maleInput = row.querySelector(
+            `input[name="graduates_data[graduates][${year}][male]"]`
+          );
+          let femaleInput = row.querySelector(
+            `input[name="graduates_data[graduates][${year}][female]"]`
+          );
+
+          let totalCell = row.querySelector(`td.total[data-year="${year}"]`);
+
+          let male = parseInt(maleInput.value) || 0;
+          let female = parseInt(femaleInput.value) || 0;
+          let total = male + female;
+
+          totalCell.textContent = total;
+
+          updateEmploymentRateByYear(year);
+        }
+
+        function updateEmploymentRate(input) {
+          let year = input.dataset.year;
+          updateEmploymentRateByYear(year);
+        }
+
+        function updateEmploymentRateByYear(year) {
+          let graduatesTotal = document.querySelector(
+            `td.total[data-year="${year}"]`
+          );
+          let employeesInput = document.querySelector(
+            `input[name="graduates_data[employment][${year}][employees]"]`
+          );
+          let rateCell = document.querySelector(
+            `td.employment-rate[data-year="${year}"]`
+          );
+
+          let graduates = parseInt(graduatesTotal.textContent) || 0;
+          let employees = parseInt(employeesInput.value) || 0;
+
+          let employmentRate =
+            graduates > 0 ? ((employees / graduates) * 100).toFixed(2) : 0;
+          rateCell.textContent = `${employmentRate}%`;
+        }
+
+        document.querySelectorAll('input[type="number"]').forEach((input) => {
+          input.addEventListener("input", function () {
+            if (this.name.includes("graduates")) {
+              updateTotal(this);
+            } else if (this.name.includes("employment")) {
+              updateEmploymentRate(this);
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

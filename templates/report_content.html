@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تقرير الدراسة الذاتية</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/final_report.css') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>{{data.get('title', '')}}</h1>
+    </header>
+    <nav>
+      <ul>
+        <li><a href="#intro">الرئيسية</a></li>
+        <li><a href="#self-study">الدراسة الذاتية</a></li>
+        <li><a href="#executive-summary">الملخص التنفيذي</a></li>
+        <li><a href="#program-file">ملف البرنامج</a></li>
+        <li><a href="#statistics">الإحصاءات والبيانات</a></li>
+        <li><a href="#evaluation">التقويم والمعايير</a></li>
+        <li><a href="#attachments">المرفقات والتوصيات</a></li>
+      </ul>
+    </nav>
+    <div class="container">
+      <section id="intro">
+        <h2>الرئيسية</h2>
+        <div
+          class="intro-content"
+          style="display: flex; flex-wrap: wrap; gap: 2rem"
+        >
+          <div class="institution-data" style="flex: 1; min-width: 250px">
+            <h3 style="color: var(--accent-color)">البيانات الأساسية</h3>
+            <p><strong>المؤسسة:</strong> {{data.get('institution', '')}}</p>
+            <p><strong>الكلية:</strong> {{data.get('college', '')}}</p>
+            <p><strong>القسم العلمي:</strong> {{data.get('department', '')}}</p>
+            <p><strong>البرنامج:</strong>{{data.get('program', '')}}</p>
+            <p>
+              <strong>تاريخ إعداد التقرير:</strong> {{data.get('reportDate',
+              '')}}
+            </p>
+          </div>
+
+          <div class="contact-data" style="flex: 1; min-width: 250px">
+            <h3 style="color: var(--accent-color)">بيانات التواصل</h3>
+            <p><strong>الاسم:</strong> {{data.get('contactName', '')}}</p>
+            <p><strong>المنصب:</strong> {{data.get('position', '')}}</p>
+            <p><strong>البريد الإلكتروني:</strong> {{data.get('email', '')}}</p>
+            <p><strong>الهاتف الجوال:</strong> {{data.get('phone', '')}}</p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="executive-summary"
+        style="
+          margin: 2rem 0;
+          padding: 1.5rem;
+          background: #fdfdfd;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+        "
+      >
+        <h2
+          style="
+            border-left: 5px solid var(--accent-color, #e74c3c);
+            padding-left: 1rem;
+            color: var(--primary-color, #2c3e50);
+          "
+        >
+          الملخص التنفيذي
+        </h2>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 1.5rem 0">
+          <thead>
+            <tr style="background: #fafafa; border: 1px solid #ccc">
+              <th>م</th>
+              <th>المعيار</th>
+              <th>التقويم الإجمالي للمعيار</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border: 1px solid #ccc">
+              <td style="padding: 0.5rem; border: 1px solid #ccc">1</td>
+              <td style="padding: 0.5rem; border: 1px solid #ccc">
+                إدارة البرنامج وضمان جودته
+              </td>
+              <td style="padding: 0.5rem; border: 1px solid #ccc">
+                ..............................................
+              </td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+              <td style="padding: 0.5rem; border: 1px solid #ccc">2</td>
+              <td style="padding: 0.5rem; border: 1px solid #ccc">
+                التعليم والتعلم
+              </td>
+              <td style="padding: 0.5rem; border: 1px solid #ccc">
+                ..............................................
+              </td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+              <td style="padding: 0.5rem; border: 1px solid #ccc">3</td>
+              <td style="padding: 0.5rem; border: 1px solid #ccc">الطلاب</td>
+              <td style="padding: 0.5rem; border: 1px solid #ccc">
+                ..............................................
+              </td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+              <td style="padding: 0.5rem; border: 1px solid #ccc">4</td>
+              <td style="padding: 0.5rem; border: 1px solid #ccc">
+                هيئة التدريس
+              </td>
+              <td style="padding: 0.5rem; border: 1px solid #ccc">
+                ..............................................
+              </td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+              <td style="padding: 0.5rem; border: 1px solid #ccc">5</td>
+              <td style="padding: 0.5rem; border: 1px solid #ccc">
+                افق والتجهيزات (مصادر التعلم والمر)
+              </td>
+              <td style="padding: 0.5rem; border: 1px solid #ccc">
+                ..............................................
+              </td>
+            </tr>
+            <tr style="border: 1px solid #ccc">
+              <td style="padding: 0.5rem; border: 1px solid #ccc">6</td>
+              <td style="padding: 0.5rem; border: 1px solid #ccc">
+                البحوث العلمية والمشاريع
+              </td>
+              <td style="padding: 0.5rem; border: 1px solid #ccc">
+                ..............................................
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin: 1rem 0">
+          <p style="font-weight: bold">أبرز جوانب القوة:</p>
+          <p>• .........................................................</p>
+        </div>
+
+        <div style="margin: 1rem 0">
+          <p style="font-weight: bold">أبرز جوانب التحسين:</p>
+          <p>• .........................................................</p>
+        </div>
+
+        <div style="margin: 1rem 0">
+          <p style="font-weight: bold">التوصيات التنفيذية:</p>
+          <p>• .........................................................</p>
+        </div>
+      </section>
+
+      <section
+        id="program-file"
+        style="
+          margin: 2rem 0;
+          padding: 1.5rem;
+          background: #fdfdfd;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+        "
+      >
+        <h2
+          style="
+            border-left: 5px solid var(--accent-color, #e74c3c);
+            padding-left: 1rem;
+            color: var(--primary-color, #2c3e50);
+          "
+        >
+          1. ملف البرنامج
+        </h2>
+        <div class="program-file-content" style="line-height: 1.8">
+          <div
+            class="card"
+            style="
+              margin-bottom: 1.5rem;
+              padding: 1rem;
+              background: #f9f9f9;
+              border: 1px solid #ccc;
+              border-radius: 8px;
+            "
+          >
+            <h3 style="color: var(--accent-color, #e74c3c)">
+              1.1 رسالة البرنامج
+            </h3>
+            <p>{{data.get('program_message', '')}}</p>
+          </div>
+
+          <div
+            class="card"
+            style="
+              margin-bottom: 1.5rem;
+              padding: 1rem;
+              background: #f9f9f9;
+              border: 1px solid #ccc;
+              border-radius: 8px;
+            "
+          >
+            <h3 style="color: var(--accent-color, #e74c3c)">
+              2.1 أهداف البرنامج
+            </h3>
+            <p>
+              {{ data.get('program_objectives', '').replace('\n', '<br />') |
+              safe }}
+            </p>
+          </div>
+
+          <div
+            class="card"
+            style="
+              margin-bottom: 1.5rem;
+              padding: 1rem;
+              background: #f9f9f9;
+              border: 1px solid #ccc;
+              border-radius: 8px;
+            "
+          >
+            <h3 style="color: var(--accent-color, #e74c3c)">
+              3.1 قائمة بأبرز إنجازات البرنامج والجوائز
+            </h3>
+            <p>
+              {{ data.get('program_achievements', '').replace('\n', '<br />') |
+              safe }}
+            </p>
+          </div>
+
+          <div
+            class="card"
+            style="
+              margin-bottom: 1.5rem;
+              padding: 1rem;
+              background: #f9f9f9;
+              border: 1px solid #ccc;
+              border-radius: 8px;
+            "
+          >
+            <h3 style="color: var(--accent-color, #e74c3c)">
+              4.1 إجمالي الساعات المعتمدة
+            </h3>
+            <p style="margin: 0.5rem 0">{{data.get('program_hours', '')}}</p>
+          </div>
+
+          <div class="card">
+            <h3 style="color: var(--accent-color, #e74c3c); text-align: right">
+              5.1 المسارات الرئيسة للبرنامج (إن وجدت)
+            </h3>
+            <table
+              style="
+                width: 100%;
+                border-collapse: collapse;
+                border: 1px solid #ccc;
+                text-align: center;
+              "
+            >
+              <thead>
+                <tr style="background: #fafafa">
+                  <th style="border: 1px solid #ccc; padding: 8px">المسار</th>
+                  <th style="border: 1px solid #ccc; padding: 8px">
+                    إجمالي الساعات المعتمدة
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for track in data.program_tracks %}
+                <tr>
+                  <td style="border: 1px solid #ccc; padding: 8px">
+                    {{ track.name }}
+                  </td>
+                  <td style="border: 1px solid #ccc; padding: 8px">
+                    {{ track.hours }}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <h3 style="color: var(--accent-color, #e74c3c); text-align: right">
+              6.1 المؤهل الممنوح / نقاط الخروج (إن وجدت)
+            </h3>
+            <table
+              style="
+                width: 100%;
+                border-collapse: collapse;
+                border: 1px solid #ccc;
+                text-align: center;
+              "
+            >
+              <thead>
+                <tr style="background: #fafafa">
+                  <th style="border: 1px solid #ccc; padding: 8px">المؤهل</th>
+                  <th style="border: 1px solid #ccc; padding: 8px">
+                    إجمالي الساعات المعتمدة
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for qualification in data.program_qualification %}
+                <tr>
+                  <td style="border: 1px solid #ccc; padding: 8px">
+                    {{ qualification.name }}
+                  </td>
+                  <td style="border: 1px solid #ccc; padding: 8px">
+                    {{ qualification.hours }}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <h3 style="color: var(--accent-color, #e74c3c)">
+              7.1 الفروع التي يقدمها البرنامج
+            </h3>
+            <ul>
+              {% for branch in data.get('program_progress', '').splitlines() %}
+              <li>{{ branch.strip() }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="statistics"
+        style="
+          margin: 2rem 0;
+          padding: 1.5rem;
+          background: #fdfdfd;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+        "
+      >
+        <h2
+          style="
+            border-left: 5px solid var(--accent-color, #e74c3c);
+            padding-left: 1rem;
+            color: var(--primary-color, #2c3e50);
+          "
+        >
+          8.1 البيانات الإحصائية للبرنامج الأكاديمي
+        </h2>
+
+        <div
+          class="card"
+          style="
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+          "
+        >
+          <h3 style="color: var(--accent-color, #e74c3c)">
+            1.8.1 تطور أعداد الطلاب الملتحقين بالبرنامج
+          </h3>
+          <table class="tg">
+            <thead>
+              <tr>
+                <th class="tg-jn3n" colspan="2">الطلاب</th>
+                <th class="tg-jn3n">قبل عامين</th>
+                <th class="tg-mus1">العام الماضي</th>
+                <th class="tg-mus1">العام الحالي</th>
+                <th class="tg-mus1">المُتوقع بعد عام</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% set num1 = "عدد الطلاب المُخطط إلتحاقهم بالبرنامج"%} {% set
+              planned = data.get("students_table", {}).get(num1, {}) %}
+              <tr>
+                <td class="tg-jn3n" rowspan="3">
+                  عدد الطلاب المُخطط إلتحاقهم بالبرنامج
+                </td>
+                <td class="tg-5w3z">ذكور</td>
+                <td class="tg-c3ow">
+                  {{ planned.get("male", {}).get("two_years", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ planned.get("male", {}).get("last_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ planned.get("male", {}).get("current_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ planned.get("male", {}).get("next_year", "غير متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-5w3z">إناث</td>
+                <td class="tg-c3ow">
+                  {{ planned.get("female", {}).get("two_years", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ planned.get("female", {}).get("last_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ planned.get("female", {}).get("current_year", "غير متوفر")
+                  }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ planned.get("female", {}).get("next_year", "غير متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-5w3z">الإجمالي</td>
+                <td class="tg-c3ow">
+                  {{ planned.get("total", {}).get("two_years", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ planned.get("total", {}).get("last_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ planned.get("total", {}).get("current_year", "غير متوفر")
+                  }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ planned.get("total", {}).get("next_year", "غير متوفر") }}
+                </td>
+              </tr>
+              {%set num2 = "العدد الكلي للطلاب الملتحقين بالبرنامج"%} {% set
+              total_students = data.get("students_table", {}).get(num2, {}) %}
+              <tr>
+                <td class="tg-jn3n" rowspan="3">
+                  العدد الكلي للطلاب الملتحقين بالبرنامج
+                </td>
+                <td class="tg-5w3z">ذكور</td>
+                <td class="tg-c3ow">
+                  {{ total_students.get("male", {}).get("two_years", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ total_students.get("male", {}).get("last_year", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ total_students.get("male", {}).get("current_year", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ total_students.get("male", {}).get("next_year", "غير
+                  متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-5w3z">إناث</td>
+                <td class="tg-c3ow">
+                  {{ total_students.get("female", {}).get("two_years", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ total_students.get("female", {}).get("last_year", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ total_students.get("female", {}).get("current_year", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ total_students.get("female", {}).get("next_year", "غير
+                  متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-5w3z">الإجمالي</td>
+                <td class="tg-c3ow">
+                  {{ total_students.get("total", {}).get("two_years", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ total_students.get("total", {}).get("last_year", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ total_students.get("total", {}).get("current_year", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ total_students.get("total", {}).get("next_year", "غير
+                  متوفر") }}
+                </td>
+              </tr>
+              {% set num3 = "عدد الطلاب الدوليين الملتحقين بالبرنامج"%} {% set
+              international = data.get("students_table", {}).get(num3, {}) %}
+              <tr>
+                <td class="tg-jn3n" rowspan="3">
+                  عدد الطلاب الدوليين الملتحقين بالبرنامج
+                </td>
+                <td class="tg-5w3z">ذكور</td>
+                <td class="tg-c3ow">
+                  {{ international.get("male", {}).get("two_years", "غير متوفر")
+                  }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ international.get("male", {}).get("last_year", "غير متوفر")
+                  }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ international.get("male", {}).get("current_year", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ international.get("male", {}).get("next_year", "غير متوفر")
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-5w3z">إناث</td>
+                <td class="tg-c3ow">
+                  {{ international.get("female", {}).get("two_years", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ international.get("female", {}).get("last_year", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ international.get("female", {}).get("current_year", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ international.get("female", {}).get("next_year", "غير
+                  متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-5w3z">الإجمالي</td>
+                <td class="tg-c3ow">
+                  {{ international.get("total", {}).get("two_years", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ international.get("total", {}).get("last_year", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ international.get("total", {}).get("current_year", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ international.get("total", {}).get("next_year", "غير
+                  متوفر") }}
+                </td>
+              </tr>
+              {%set num4 = "متوسط عدد الطلاب في الشعب الدراسية"%} {% set average
+              = data.get("students_table", {}).get(num4, {}) %}
+              <tr>
+                <td class="tg-jn3n" rowspan="3">
+                  متوسط عدد الطلاب في الشعب الدراسية
+                </td>
+                <td class="tg-5w3z">ذكور</td>
+                <td class="tg-c3ow">
+                  {{ average.get("male", {}).get("two_years", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ average.get("male", {}).get("last_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ average.get("male", {}).get("current_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ average.get("male", {}).get("next_year", "غير متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-5w3z">إناث</td>
+                <td class="tg-c3ow">
+                  {{ average.get("female", {}).get("two_years", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ average.get("female", {}).get("last_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ average.get("female", {}).get("current_year", "غير متوفر")
+                  }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ average.get("female", {}).get("next_year", "غير متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-5w3z">الإجمالي</td>
+                <td class="tg-c3ow">
+                  {{ average.get("total", {}).get("two_years", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ average.get("total", {}).get("last_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ average.get("total", {}).get("current_year", "غير متوفر")
+                  }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ average.get("total", {}).get("next_year", "غير متوفر") }}
+                </td>
+              </tr>
+              {% set num5 = "نسبة عدد الطلاب لهيئة التدريس"%} {% set ratio =
+              data.get("students_table", {}).get(num5, {}) %}
+              <tr>
+                <td class="tg-jn3n" rowspan="3">
+                  نسبة عدد الطلاب لهيئة التدريس
+                </td>
+                <td class="tg-5w3z">ذكور</td>
+                <td class="tg-c3ow">
+                  {{ ratio.get("male", {}).get("two_years", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ ratio.get("male", {}).get("last_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ ratio.get("male", {}).get("current_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ ratio.get("male", {}).get("next_year", "غير متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-5w3z">إناث</td>
+                <td class="tg-c3ow">
+                  {{ ratio.get("female", {}).get("two_years", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ ratio.get("female", {}).get("last_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ ratio.get("female", {}).get("current_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ ratio.get("female", {}).get("next_year", "غير متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-5w3z">الإجمالي</td>
+                <td class="tg-c3ow">
+                  {{ ratio.get("total", {}).get("two_years", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ ratio.get("total", {}).get("last_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ ratio.get("total", {}).get("current_year", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ ratio.get("total", {}).get("next_year", "غير متوفر") }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          class="card"
+          style="
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+          "
+        >
+          <h3 style="color: var(--accent-color, #e74c3c)">
+            2.8.1 تصنيف الطلاب حسب نظام الدراسة (خلال العام الحالي)
+          </h3>
+          <table class="tg">
+            <thead>
+              <tr>
+                <th class="tg-jn3n" colspan="2" rowspan="3">التصنيف</th>
+                <th class="tg-jn3n" colspan="7">عدد الطلاب</th>
+              </tr>
+              <tr>
+                <th class="tg-jn3n" colspan="3">سعودي</th>
+                <th class="tg-jn3n" colspan="3">غير سعودي</th>
+                <th class="tg-jn3n" rowspan="2">الإجمالي</th>
+              </tr>
+              <tr>
+                <th class="tg-5w3z">ذكور</th>
+                <th class="tg-5w3z">إناث</th>
+                <th class="tg-d53b">الإجمالي</th>
+                <th class="tg-5w3z">ذكور</th>
+                <th class="tg-5w3z">إناث</th>
+                <th class="tg-d53b">الإجمالي</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for study_mode, details in data.get("enrollment_data",
+              {}).items() %}
+              <tr>
+                {% if loop.first %}
+                <td
+                  class="tg-mak0"
+                  rowspan="{{ data['enrollment_data'] | length }}"
+                >
+                  نظام الدراسة
+                </td>
+                {% endif %}
+                <td class="tg-d53b">{{ study_mode }}</td>
+                <td class="tg-0pky">{{ details["سعودي"]["male"] }}</td>
+                <td class="tg-c3ow">{{ details["سعودي"]["female"] }}</td>
+                <td class="tg-c3ow">{{ details["سعودي"]["total"] }}</td>
+                <td class="tg-0pky">{{ details["غير سعودي"]["male"] }}</td>
+                <td class="tg-c3ow">{{ details["غير سعودي"]["female"] }}</td>
+                <td class="tg-c3ow">{{ details["غير سعودي"]["total"] }}</td>
+                <td class="tg-0lax">{{ details["الإجمالي"] }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          class="card"
+          style="
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+          "
+        >
+          <h3 style="color: var(--accent-color, #e74c3c)">
+            3.8.1 تطور أعداد خريجي البرنامج
+          </h3>
+          {% set graduates_data = data.get("graduates_data", {}) %} {% set
+          graduates = graduates_data.get("graduates", {}) %} {% set employment =
+          graduates_data.get("employment", {}) %}
+
+          <table class="tg">
+            <thead>
+              <tr>
+                <th class="tg-rk10">الخريجون</th>
+                <th class="tg-jkj7" colspan="2">قبل ثلاثة أعوام</th>
+                <th class="tg-58am" colspan="2">قبل عامين</th>
+                <th class="tg-58am" colspan="2">العام الماضي</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="tg-aacx" colspan="7">أعداد الخريجين</td>
+              </tr>
+              <tr>
+                <td class="tg-rk10">الطلاب</td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ graduates.get("قبل ثلاثة أعوام", {}).get("male", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ graduates.get("قبل عامين", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ graduates.get("العام الماضي", {}).get("male", "غير متوفر")
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-rk10">الطالبات</td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ graduates.get("قبل ثلاثة أعوام", {}).get("female", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ graduates.get("قبل عامين", {}).get("female", "غير متوفر")
+                  }}
+                </td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ graduates.get("العام الماضي", {}).get("female", "غير
+                  متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-rk10">المجموع</td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ graduates.get("قبل ثلاثة أعوام", {}).get("total", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ graduates.get("قبل عامين", {}).get("total", "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ graduates.get("العام الماضي", {}).get("total", "غير متوفر")
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-ixhm" colspan="7">توظيف الخريجين</td>
+              </tr>
+              <tr>
+                <td class="tg-rk10">عدد الموظفين من خريجي البرنامج</td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ employment.get("قبل ثلاثة أعوام", {}).get("employees", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ employment.get("قبل عامين", {}).get("employees", "غير
+                  متوفر") }}
+                </td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ employment.get("العام الماضي", {}).get("employees", "غير
+                  متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-rk10">نسبة الموظفين إلى إجمالي الخريجين</td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ employment.get("قبل ثلاثة أعوام",
+                  {}).get("employment_rate", "غير متوفر") }}%
+                </td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ employment.get("قبل عامين", {}).get("employment_rate", "غير
+                  متوفر") }}%
+                </td>
+                <td class="tg-fzdr" colspan="2">
+                  {{ employment.get("العام الماضي", {}).get("employment_rate",
+                  "غير متوفر") }}%
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          class="card"
+          style="
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+          "
+        >
+          <h3 style="color: var(--accent-color, #e74c3c)">
+            4.8.1 أعداد هيئة التدريس
+          </h3>
+          {% set faculty = data.get("faculty", {}) %} {% set saud =
+          faculty.get("سعودي", {}) %} {% set non_saud = faculty.get("غير سعودي",
+          {}) %} {% set avg = faculty.get("متوسط عبئ التدريس", {}) %}
+
+          <table class="tg">
+            <thead>
+              <tr>
+                <th class="tg-jkj7" rowspan="2"></th>
+                <th class="tg-z6tm" rowspan="2">هيئة التدريس **</th>
+                <th class="tg-jn3n" colspan="3">سعودي</th>
+                <th class="tg-jn3n" colspan="3">غير سعودي</th>
+                <th class="tg-jn3n" colspan="3">
+                  متوسط عبئ التدريس<br />
+                  لإجمالي هيئة التدريس
+                </th>
+              </tr>
+              <tr>
+                <th class="tg-2fdf">ذكور</th>
+                <th class="tg-2fdf">إناث</th>
+                <th class="tg-2fdf">الإجمالي</th>
+                <th class="tg-2fdf">ذكور</th>
+                <th class="tg-2fdf">إناث</th>
+                <th class="tg-2fdf">الإجمالي</th>
+                <th class="tg-2fdf">ذكور</th>
+                <th class="tg-2fdf">إناث</th>
+                <th class="tg-2fdf">الإجمالي</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="tg-mak0" rowspan="4">أعضاء هيئة التدريس</td>
+                <td class="tg-d53b">أستاذ</td>
+                <td class="tg-c3ow">
+                  {{ saud.get("أستاذ", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ saud.get("أستاذ", {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ saud.get("أستاذ", {}).get("total", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ non_saud.get("أستاذ", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ non_saud.get("أستاذ", {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ non_saud.get("أستاذ", {}).get("total", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ avg.get("أستاذ", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ avg.get("أستاذ", {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ avg.get("أستاذ", {}).get("total", "غير متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-d53b">أستاذ مشارك</td>
+                <td class="tg-c3ow">
+                  {{ saud.get("أستاذ مشارك", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ saud.get("أستاذ مشارك", {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ saud.get("أستاذ مشارك", {}).get("total", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ non_saud.get("أستاذ مشارك", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ non_saud.get("أستاذ مشارك", {}).get("female", "غير متوفر")
+                  }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ non_saud.get("أستاذ مشارك", {}).get("total", "غير متوفر")
+                  }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ avg.get("أستاذ مشارك", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ avg.get("أستاذ مشارك", {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ avg.get("أستاذ مشارك", {}).get("total", "غير متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-d53b">أستاذ مساعد</td>
+                <td class="tg-c3ow">
+                  {{ saud.get("أستاذ مساعد", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ saud.get("أستاذ مساعد", {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ saud.get("أستاذ مساعد", {}).get("total", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ non_saud.get("أستاذ مساعد", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ non_saud.get("أستاذ مساعد", {}).get("female", "غير متوفر")
+                  }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ non_saud.get("أستاذ مساعد", {}).get("total", "غير متوفر")
+                  }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ avg.get("أستاذ مساعد", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ avg.get("أستاذ مساعد", {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ avg.get("أستاذ مساعد", {}).get("total", "غير متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-d53b">الإجمالي</td>
+                <td class="tg-c3ow">
+                  {{ saud.get("الإجمالي", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ saud.get("الإجمالي", {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ saud.get("الإجمالي", {}).get("total", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ non_saud.get("الإجمالي", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ non_saud.get("الإجمالي", {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ non_saud.get("الإجمالي", {}).get("total", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ avg.get("الإجمالي", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ avg.get("الإجمالي", {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-c3ow">
+                  {{ avg.get("الإجمالي", {}).get("total", "غير متوفر") }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div
+          class="card"
+          style="
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+          "
+        >
+          <h3 style="color: var(--accent-color, #e74c3c)">
+            5.8.1 تصنيف هيئة التدريس وفقًا لنظام الدراسة
+          </h3>
+          {% set faculty_classify = data.get("faculty_classify", {}) %} {% set
+          entizam = faculty_classify.get("انتظام", {}) %} {% set anb3d =
+          faculty_classify.get("عن بعد", {}) %}
+
+          <table class="tg">
+            <thead>
+              <tr>
+                <th class="tg-rk10" rowspan="3">هيئة التدريس **</th>
+                <th class="tg-rk10" colspan="3">انتظام</th>
+                <th class="tg-rk10" colspan="3">عن بعد</th>
+              </tr>
+              <tr>
+                <th class="tg-o5s1" rowspan="2">بدوام كامل</th>
+                <th class="tg-o5s1" colspan="2">بدوام جزئي</th>
+                <th class="tg-o5s1" rowspan="2">بدوام كامل</th>
+                <th class="tg-o5s1" colspan="2">بدوام جزئي</th>
+              </tr>
+              <tr>
+                <th class="tg-pnp8">العدد</th>
+                <th class="tg-pnp8">ما يعادله بالدوام الكامل</th>
+                <th class="tg-r7qn">العدد</th>
+                <th class="tg-r7qn">ما يعادله بالدوام الكامل</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="tg-edmn">ذكور</td>
+                <td class="tg-fzdr">
+                  {{ entizam.get("بدوام كامل", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ entizam.get("بدوام جزئي", {}).get("العدد", {}).get("male",
+                  "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ entizam.get("بدوام جزئي", {}).get("ما يعادله",
+                  {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ anb3d.get("بدوام كامل", {}).get("male", "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ anb3d.get("بدوام جزئي", {}).get("العدد", {}).get("male",
+                  "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ anb3d.get("بدوام جزئي", {}).get("ما يعادله",
+                  {}).get("male", "غير متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-edmn">إناث</td>
+                <td class="tg-fzdr">
+                  {{ entizam.get("بدوام كامل", {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ entizam.get("بدوام جزئي", {}).get("العدد",
+                  {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ entizam.get("بدوام جزئي", {}).get("ما يعادله",
+                  {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ anb3d.get("بدوام كامل", {}).get("female", "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ anb3d.get("بدوام جزئي", {}).get("العدد", {}).get("female",
+                  "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ anb3d.get("بدوام جزئي", {}).get("ما يعادله",
+                  {}).get("female", "غير متوفر") }}
+                </td>
+              </tr>
+              <tr>
+                <td class="tg-edmn">الإجمالي</td>
+                <td class="tg-fzdr">
+                  {{ entizam.get("بدوام كامل", {}).get("total", "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ entizam.get("بدوام جزئي", {}).get("العدد", {}).get("total",
+                  "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ entizam.get("بدوام جزئي", {}).get("ما يعادله",
+                  {}).get("total", "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ anb3d.get("بدوام كامل", {}).get("total", "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ anb3d.get("بدوام جزئي", {}).get("العدد", {}).get("total",
+                  "غير متوفر") }}
+                </td>
+                <td class="tg-fzdr">
+                  {{ anb3d.get("بدوام جزئي", {}).get("ما يعادله",
+                  {}).get("total", "غير متوفر") }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div
+        style="
+          margin-top: 1.5rem;
+          padding: 1rem;
+          background: #f9f9f9;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+        "
+      >
+        <h3 style="color: var(--accent-color, #e74c3c)">
+          6.8.1 مناقشة البيانات الإحصائية
+        </h3>
+
+        <p style="font-weight: bold">أبرز جوانب القوة:</p>
+        <p>
+          {% for item in data.get('recommendations')["نقاط القوة"] %} • {{ item
+          }}<br />
+          {% endfor %}
+        </p>
+        <br />
+        <p style="font-weight: bold">أبرز جوانب التحسين:</p>
+        <p>
+          {% for item in data.get('recommendations')["نقاط الضعف"] %} • {{ item
+          }}<br />
+          {% endfor %}
+        </p>
+        <br />
+        <p style="font-weight: bold">توصيات التطوير:</p>
+        <p>
+          {% for item in data.get('recommendations')["مجالات التحسين"] %} • {{
+          item }}<br />
+          {% endfor %}
+        </p>
+        <br />
+      </div>
+      <!-- عرض الرسوم البيانية 
+  <div style="text-align: center; margin-top: 2rem;">
+    <h4>الرسوم البيانية</h4>
+    <div>
+      <h4>توزيع الكادر الأكاديمي</h4>
+      {{ data.get("faculty_graph_div") | safe }}
+    </div>
+    <br>
+    <div>
+      <h4>اتجاه نسبة الطلاب الدوليين</h4>
+      {{ data.get("student_intl_div") | safe }}
+    </div>
+    <br>
+    <div>
+      <h4>معدلات التوظيف للخريجين</h4>
+      {{ data.get("employment_div") | safe }}
+    </div>
+  </div>
+</div>-->
+      <section
+        id="self-study"
+        style="
+          margin: 2rem 0;
+          padding: 1.5rem;
+          background: #fdfdfd;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+        "
+      >
+        <h2
+          style="
+            border-left: 5px solid var(--accent-color, #e74c3c);
+            padding-left: 1rem;
+            color: var(--primary-color, #2c3e50);
+          "
+        >
+          2. الدراسة الذاتية للبرنامج
+        </h2>
+
+        <div
+          class="card"
+          style="
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+          "
+        >
+          <h3 style="color: var(--accent-color, #e74c3c)">
+            2.1 جهات المقارنة وسبب اختيارها
+          </h3>
+          <table>
+            <thead>
+              <tr>
+                <th>م</th>
+                <th>الجهة</th>
+                <th>سبب الإختيار</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for comparison in data.comparison_entities %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ comparison.entity }}</td>
+                <td>{{ comparison.reason }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          class="card"
+          style="
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+          "
+        >
+          <h3 style="color: var(--accent-color, #e74c3c)">
+            2.2 ملخص مؤشرات الأداء الرئيسة
+          </h3>
+          <table id="kpiTable">
+            <thead>
+              <tr>
+                <th>م</th>
+                <th width="25%">مؤشر الأداء</th>
+                <th>مستوى الأداء الفعلي</th>
+                <th>مستوى الأداء المستهدف</th>
+                <th>مستوى الأداء المرجعي الداخلي</th>
+                <th>مستوى الأداء المرجعي الخارجي (إن وجد)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for kpi in data.kpis %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ kpi.indicator }}</td>
+                <td>{{ kpi.actual }}%</td>
+                <td>{{ kpi.target }}%</td>
+                <td>{{ kpi.internal_ref }}%</td>
+                <td>{{ kpi.external_ref }}%</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 
+      <section id="attachments">
+        <h2>المرفقات والتوصيات</h2>
+      </section> -->
+
+      <div class="button-container">
+        <a href="{{ url_for('edit_report', report_id=report_id) }}" class="btn"
+          >تعديل التقرير</a
+        >
+        <a href="#" class="btn copy-btn" onclick="copyReportLink()">
+          نسخ رابط التقرير</a
+        >
+      </div>
+
+      <footer>
+        <p>&copy; 2025 جميع الحقوق محفوظة - QualiAI</p>
+      </footer>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    function copyReportLink() {
+      const reportLink = "{{ request.url }}";
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard
+          .writeText(reportLink)
+          .then(() => {
+            Swal.fire({
+              icon: "success",
+              title: "تم النسخ!",
+              text: "تم نسخ رابط التقرير إلى الحافظة.",
+              confirmButtonText: "موافق",
+            });
+          })
+          .catch((err) => {
+            console.error("خطأ أثناء النسخ", err);
+            fallbackCopyText(reportLink);
+          });
+      } else {
+        fallbackCopyText(reportLink);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand("copy");
+        Swal.fire({
+          icon: "success",
+          title: "تم النسخ!",
+          text: "تم نسخ رابط التقرير إلى الحافظة.",
+          confirmButtonText: "موافق",
+        });
+      } catch (err) {
+        console.error("فشل النسخ:", err);
+      }
+      document.body.removeChild(textArea);
+    }
+  </script>
+</html>

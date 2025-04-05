@@ -1,6 +1,5 @@
 {% extends "base.html" %} {% block content %}
 <div class="container mt-5" dir="rtl">
-  <!-- شريط خطوات التقدم -->
   <div
     class="steps-horizontal mb-4 d-flex align-items-center justify-content-between"
   >
@@ -25,29 +24,7 @@
     </div>
     {% endfor %}
   </div>
-  <!-- 
-  {% if step_number == total_steps %}
-  عرض النقاط التفصيلية عند الخطوة الرابعة 
-  <div class="mb-4 text-center">
-    <ul
-      class="list-inline"
-      style="
-        list-style-type: disc;
-        display: inline-block;
-        text-align: right;
-        padding-right: 20px;
-        font-size: 16px;
-        color: #007bff;
-      "
-    >
-      <li>تقييم الأداء العام</li>
-      <li>إبراز نقاط القوة</li>
-      <li>تحديد مجالات التحسين</li>
-    </ul>
-  </div>
-  {% endif %}-->
 
-  <!-- حاوية النموذج -->
   <div class="card shadow">
     <div class="card-header bg-primary text-white">
       <h4 class="mb-0">
@@ -60,7 +37,6 @@
       <form method="POST" enctype="multipart/form-data">
         {% if step_number == 1 %}
 
-        <!-- بيانات المؤسسة والاتصال -->
         <div class="form-group">
           <label for="title">عنوان التقرير</label>
           <input
@@ -116,6 +92,7 @@
             value="{{ data.get('program', '') }}"
           />
         </div>
+          <!-- 
         <div class="form-group">
           <label for="reportDate">تاريخ إعداد التقرير</label>
           <input
@@ -128,7 +105,7 @@
           />
         </div>
         <hr />
-        <!-- بيانات التواصل -->
+
         <h3>بيانات التواصل</h3>
         <div class="form-group">
           <label for="contactName">الاسم</label>
@@ -174,11 +151,9 @@
             value="{{ data.get('phone', '') }}"
           />
         </div>
-
+-->
         {% elif step_number == 2 %}
-        <!-- ملف البرنامج -->
         <div class="card-body">
-          <!-- قسم المعلومات العامة للبرنامج -->
           <h3 class="card-title">المعلومات العامة للبرنامج</h3>
           <div class="form-group">
             <label for="program_message">رسالة البرنامج</label>
@@ -253,7 +228,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- سيتم توليد الصفوف عبر JavaScript -->
                 </tbody>
               </table>
             </div>
@@ -281,9 +255,7 @@
                     <th>إجمالي الساعات المعتمدة</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <!-- سيتم توليد الصفوف عبر JavaScript -->
-                </tbody>
+                <tbody></tbody>
               </table>
             </div>
           </div>
@@ -302,12 +274,12 @@
           <hr />
           <h3 class="card-title">البيانات الإحصائية للبرنامج الأكاديمي</h3>
           <div class="form-group">
-            <label for="excel_students">تحميل جدول أعداد الطلاب</label>
+            <label for="excel_students">تحميل جدول إحصائيات الملتحقين</label>
             <a
               href="{{ url_for('static', filename='templates/template_students.xlsx') }}"
               target="_blank"
               class="btn btn-link"
-              >تحميل المثال</a
+              >نموذج لتعبئته</a
             >
             <input
               type="file"
@@ -319,12 +291,14 @@
             />
           </div>
           <div class="form-group">
-            <label for="excel_enrollment">تحميل جدول إحصائيات الملتحقين</label>
+            <label for="excel_enrollment"
+              >تحميل جدول تصنيف الطلاب حسب نظام الدراسة</label
+            >
             <a
               href="{{ url_for('static', filename='templates/template_enrollment.xlsx') }}"
               target="_blank"
               class="btn btn-link"
-              >تحميل المثال</a
+              >نموذج لتعبئته</a
             >
             <input
               type="file"
@@ -341,7 +315,7 @@
               href="{{ url_for('static', filename='templates/template_graduates.xlsx') }}"
               target="_blank"
               class="btn btn-link"
-              >تحميل المثال</a
+              >نموذج لتعبئته</a
             >
             <input
               type="file"
@@ -353,18 +327,38 @@
             />
           </div>
           <div class="form-group">
-            <label for="excel_additional">تحميل جدول هيئة التدريس</label>
+            <label for="excel_faculty">تحميل جدول أعداد هيئة التدريس</label>
             <a
               href="{{ url_for('static', filename='templates/template_faculty.xlsx') }}"
               target="_blank"
               class="btn btn-link"
-              >تحميل المثال</a
+              >نموذج لتعبئته</a
             >
             <input
               type="file"
               class="form-control-file"
-              id="excel_additional"
-              name="excel_additional"
+              id="excel_faculty"
+              name="excel_faculty"
+              accept=".xlsx,.xls"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="excel_faculty_classify"
+              >تحميل جدول تصنيف هيئة التدريس وفقًا لنظام الدراسة
+            </label>
+            <a
+              href="{{ url_for('static', filename='templates/template_faculty_classify.xlsx') }}"
+              target="_blank"
+              class="btn btn-link"
+              >نموذج لتعبئته</a
+            >
+            <input
+              type="file"
+              class="form-control-file"
+              id="excel_faculty_classify"
+              name="excel_faculty_classify"
               accept=".xlsx,.xls"
               required
             />
@@ -372,51 +366,92 @@
           <hr />
         </div>
         {% elif step_number == 3 %}
-        <!-- الدراسة الذاتية للبرنامج -->
         <div class="card-body">
-          <!-- 2.1 جهات المقارنة وسبب اختيارها -->
           <h3 class="card-title">
             2.1 جهات المقارنة وسبب اختيارها (داخليًا أو خارجيًا)
           </h3>
-          <div class="form-group">
-            <label for="comparison_file">رفع ملف جهات المقارنة</label>
-            <input
-              type="file"
-              class="form-control-file"
-              id="comparison_file"
-              name="comparison_file"
-              accept=".xlsx, .xls"
-              required
-            />
-            <a
-              href="{{ url_for('static', filename='templates/template_comparison.xlsx') }}"
-              target="_blank"
-              class="btn btn-link"
-              >تحميل نموذج جاهز</a
-            >
+          <table id="comparisonTable">
+            <thead>
+              <tr>
+                <th>الجهة</th>
+                <th>سبب الاختيار</th>
+                <th>إجراء</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for comp in comparisons %}
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    name="entity[]"
+                    value="{{ comp.entity }}"
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    name="reason[]"
+                    value="{{ comp.reason }}"
+                    required
+                  />
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="removeRow"
+                    onclick="removeRow(this)"
+                  >
+                    ❌
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+          <div class="button-container">
+            <button type="button" class="button" onclick="addRow()">
+              إضافة صف
+            </button>
           </div>
-          <!-- 2.2 ملخص مؤشرات الأداء الرئيسة والمقارنة المرجعية -->
-          <h3 class="card-title mt-4">
-            2.2 ملخص مؤشرات الأداء الرئيسة والمقارنة المرجعية
-          </h3>
-          <div class="form-group">
-            <label for="indicators_file">رفع ملف مؤشرات الأداء الرئيسة</label>
-            <input
-              type="file"
-              class="form-control-file"
-              id="indicators_file"
-              name="indicators_file"
-              accept=".xlsx, .xls"
-              required
-            />
-            <a
-              href="{{ url_for('static', filename='templates/template_indicators.xlsx') }}"
-              target="_blank"
-              class="btn btn-link"
-              >تحميل نموذج جاهز</a
-            >
+
+          <h3 class="card-title mt-4">2.2 ملخص مؤشرات الأداء الرئيسة والمقارنة المرجعية</h3>
+
+          <table id="kpiTable">
+              <thead>
+                  <tr>
+                      <th>م</th>
+                      <th>مؤشر الأداء</th>
+                      <th>مستوى الأداء الفعلي</th>
+                      <th>مستوى الأداء المستهدف</th>
+                      <th>مستوى الأداء المرجعي الداخلي</th>
+                      <th>مستوى الأداء المرجعي الخارجي</th>
+                      <th>إجراء</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for kpi in data.kpis_row %}
+                  <tr>
+                      <td>{{ loop.index }}</td>
+                      <td><input type="text" name="indicator[]" value="{{ kpi.indicator }}" required /></td>
+                      <td><input type="number" name="actual[]" value="{{ kpi.actual }}" step="0.01" required /></td>
+                      <td><input type="number" name="target[]" value="{{ kpi.target }}" step="0.01" required /></td>
+                      <td><input type="number" name="internal_ref[]" value="{{ kpi.internal_ref }}" step="0.01" required /></td>
+                      <td><input type="number" name="external_ref[]" value="{{ kpi.external_ref }}" step="0.01" /></td>
+                      <td>
+                          <button type="button" class="x" onclick="removeRowKpi(this)">❌</button>
+                      </td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+          
+          <div class="btn-container">
+              <button type="button" class="button" onclick="addRowKpi()">إضافة معيار جديد</button>
           </div>
-        </div>
+          
         {% elif step_number == 4 %}
         <div class="stepper-container">
           <div class="steps">
@@ -432,14 +467,14 @@
                 </div>
               </div>
               <div class="step-content">
-                <p class="content-title">📋 الملفات المطلوبة:</p>
+                <p class="content-title"> الملفات المطلوبة:</p>
                 <ul class="content-list">
                   {% for f in required_files %}
                   <li>{{ f }}</li>
                   {% endfor %}
                 </ul>
                 <div class="form-group">
-                  <label for="files_{{ loop.index }}">📂 تحميل الملفات:</label>
+                  <label for="files_{{ loop.index }}"> تحميل الملفات:</label>
                   <input
                     type="file"
                     class="form-control-file"
@@ -488,9 +523,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <script>
-          // استخدام jQuery للتأثيرات
           $(document).ready(function () {
-            // عند الضغط على زر "التالي" أو "السابق"
             window.toggleStep = function (currentIndex, action) {
               let currentStep = $('.step[data-step="' + currentIndex + '"]');
               let targetStep;
@@ -499,14 +532,13 @@
               } else if (action === "prev") {
                 targetStep = currentStep.prev(".step");
               } else if (action === "close") {
-                // عند الضغط على إغلاق، فقط يتم طي الخطوة الحالية
+
                 currentStep.find(".step-content").slideUp(300, function () {
                   $(this).addClass("minimized");
                 });
                 return;
               }
               if (targetStep.length) {
-                // طي الخطوة الحالية ثم فتح الهدف
                 currentStep.find(".step-content").slideUp(300, function () {
                   $(this).addClass("minimized");
                   targetStep.find(".step-content").slideDown(300, function () {
@@ -516,11 +548,9 @@
               }
             };
 
-            // النقر على الرأس لفتح الخطوة إذا كانت مغلقة
             $(".step-header").on("click", function () {
               let step = $(this).closest(".step");
               if (step.hasClass("minimized")) {
-                // إغلاق أي خطوة مفتوحة أخرى\n        $('.step-content').slideUp(300).addClass('minimized');
                 step.find(".step-content").slideDown(300, function () {
                   $(this).removeClass("minimized");
                 });
@@ -530,7 +560,6 @@
         </script>
         {% endif %}
 
-        <!-- عناصر التنقل بين الخطوات -->
         <div class="form-navigation mt-4 clearfix">
           <div class="float-right">
             {% if step_number > 1 %}

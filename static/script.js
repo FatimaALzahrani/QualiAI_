@@ -1,49 +1,38 @@
-document.addEventListener("DOMContentLoaded", function () {
-  function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  }
+function updateTotal(input) {
+  let studyMode = input.dataset.studyMode;
+  let group = input.dataset.group;
 
-  const loginForm = document.getElementById("loginForm");
-  if (loginForm) {
-    loginForm.addEventListener("submit", function (event) {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
+  let maleInput = document.querySelector(
+    `input[data-study-mode="${studyMode}"][data-group="${group}"][data-type="male"]`
+  );
+  let femaleInput = document.querySelector(
+    `input[data-study-mode="${studyMode}"][data-group="${group}"][data-type="female"]`
+  );
 
-      if (!validateEmail(email)) {
-        alert("يرجى إدخال بريد إلكتروني صالح.");
-        event.preventDefault();
-      } else if (password.length < 6) {
-        alert("كلمة المرور يجب أن تكون 6 أحرف على الأقل.");
-        event.preventDefault();
-      }
-    });
-  }
+  let totalField = document.querySelector(
+    `.total[data-study-mode="${studyMode}"][data-group="${group}"]`
+  );
+  let grandTotalField = document.querySelector(
+    `.grand-total[data-study-mode="${studyMode}"]`
+  );
 
-  // التحقق من نموذج التسجيل
-  const registerForm = document.getElementById("registerForm");
-  if (registerForm) {
-    registerForm.addEventListener("submit", function (event) {
-      const username = document.getElementById("username").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const confirm_password = document
-        .getElementById("confirm_password")
-        .value.trim();
+  let maleValue = parseFloat(maleInput.value) || 0;
+  let femaleValue = parseFloat(femaleInput.value) || 0;
 
-      if (username.length < 3) {
-        alert("اسم المستخدم يجب أن يكون 3 أحرف على الأقل.");
-        event.preventDefault();
-      } else if (!validateEmail(email)) {
-        alert("يرجى إدخال بريد إلكتروني صالح.");
-        event.preventDefault();
-      } else if (password.length < 6) {
-        alert("كلمة المرور يجب أن تكون 6 أحرف على الأقل.");
-        event.preventDefault();
-      } else if (confirm_password !== password) {
-        alert("كلمة المرور وتأكيد كلمة المرور يجب أن يتطابقا.");
-        event.preventDefault();
-      }
-    });
-  }
-});
+  let total = maleValue + femaleValue;
+  totalField.textContent = total;
+
+  let saudiTotal =
+    parseFloat(
+      document.querySelector(
+        `.total[data-study-mode="${studyMode}"][data-group="سعودي"]`
+      ).textContent
+    ) || 0;
+  let nonSaudiTotal =
+    parseFloat(
+      document.querySelector(
+        `.total[data-study-mode="${studyMode}"][data-group="غير سعودي"]`
+      ).textContent
+    ) || 0;
+  grandTotalField.textContent = saudiTotal + nonSaudiTotal;
+}

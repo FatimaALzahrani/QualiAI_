@@ -1,22 +1,19 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <title>تم إنشاء التقرير</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تقرير الدراسة الذاتية</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/final_report.css') }}"
+    />
   </head>
   <body>
-    <div class="container">
-      <h2>تم إنشاء التقرير بنجاح!</h2>
-      <p>يمكنك مشاركة التقرير عبر الرابط التالي:</p>
-      <a href="{{ shareable_link }}" target="_blank">{{ shareable_link }}</a>
-    </div>
+    {% include 'report_content.html' %}
   </body>
 </html>
