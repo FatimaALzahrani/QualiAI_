@@ -490,7 +490,7 @@ def step(step_number):
     data['position'] = user.get('position', 'غير محدد')
     data['email'] = user.get('email', 'غير محدد')
     data['phone'] = user.get('phone', 'غير محدد')
-    data['reportDate'] = datetime.now().strftime('%Y-%m-%d')
+    data['reportDate'] = datetime.now().strftime('%A %d %B %Y')
 
     if request.method == 'POST':
         if step_number == 1:
