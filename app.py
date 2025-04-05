@@ -12,7 +12,6 @@ import os, uuid
 import json
 import plotly.graph_objs as go
 from plotly.offline import plot
-from tabulate import tabulate
 import requests
 
 from config import firebase_config
