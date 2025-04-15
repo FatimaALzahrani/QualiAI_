@@ -9,3 +9,4 @@ flash
 plotly
 openai
 textblob
+sentence-transformers
