@@ -3,8 +3,10 @@ from flask import Flask, render_template,render_template_string, request, redire
 import firebase_admin
 from firebase_admin import credentials, auth, firestore
 import pandas as pd
+from fpdf import FPDF
 from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
+from PyPDF2 import PdfReader
 import numpy as np
 import os, uuid
 import json
@@ -90,29 +92,31 @@ DEFAULT_STUDENT_STANDARDS = {
 }
 
 
-def extract_list(section_title, text):
-    stop_words = ['نقاط القوة', 'نقاط الضعف', 'مجالات التحسين', 'التوصيات', 'الخطة الاستراتيجية', 'الضعف']
-    stop_words = [w for w in stop_words if w != section_title] 
-    stop_pattern = "|".join([re.escape(w) for w in stop_words])
-    
-    section_pattern = rf"(?:\[{section_title}\]|{section_title})\s*[:：]?\s*"
-
-    pattern = rf"{section_pattern}(.*?)(?=\n(?:{stop_pattern})|\Z)"
-    
-    match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
-    
-    if match:
-        section_text = match.group(1).strip()
+def extract_list(section_name, text):
+    """استخراج النقاط من الأقسام المحددة باستخدام التعابير النمطية المحسنة"""
+    try:
+        pattern = re.compile(
+            rf'\[{re.escape(section_name)}\]\s*((?:- .+?\n|\d+\. .+?\n)+)',
+            re.IGNORECASE | re.DOTALL
+        )
+        match = pattern.search(text)
+        if not match:
+            return []
         
-        items = re.findall(r"(?:^-|\d+[.)])\s*(.+)", section_text, re.MULTILINE)
+        items = re.findall(r'(?:-|\d+\.)\s*(.*?)(?=\n\s*(?:-|\d+\.|\[|$))', match.group(1))
         return [item.strip() for item in items if item.strip()]
-    
-    return []
+    except Exception as e:
+        app.logger.error(f"Error extracting {section_name}: {str(e)}")
+        return []
 
 def process_students_standard(uploaded_files, standards_data):
+    """معالجة معيار الطلاب بتقنيات الذكاء الاصطناعي المتقدمة"""
+    
+    # التحقق من وجود ملفات
     if not uploaded_files or not any(f.filename for f in uploaded_files):
         return {"error": "لم يتم رفع أي ملفات"}
     
+    # معالجة الملفات
     all_questions = []
     sources = []
     
@@ -142,14 +146,17 @@ def process_students_standard(uploaded_files, standards_data):
     if not all_questions:
         return {"error": "لم يتم العثور على أسئلة صالحة في الملفات المرفوعة"}
     
+    # تجهيز بيانات المعايير
     try:
         std_texts = [std["text"] for std in standards_data]
         std_ids = [std["id"] for std in standards_data]
         
+        # حساب التشابه الدلالي
         q_emb = model.encode(all_questions, convert_to_tensor=True)
         std_emb = model.encode(std_texts, convert_to_tensor=True)
         cosine_scores = util.cos_sim(q_emb, std_emb)
         
+        # توزيع الأسئلة على المحكات
         students_map = {sid: [] for sid in std_ids}
         for i, question in enumerate(all_questions):
             best_score = float(cosine_scores[i].max())
@@ -164,6 +171,7 @@ def process_students_standard(uploaded_files, standards_data):
     except Exception as e:
         return {"error": "حدث خطأ فني أثناء معالجة البيانات"}
 
+    # تقييم المحكات الفرعية
     sub_evaluations = []
     total_sub_score = 0
     applicable_count = 0
@@ -172,16 +180,19 @@ def process_students_standard(uploaded_files, standards_data):
         if not questions:
             continue
         try:
+            # تجهيز بيانات المحك
             std_entry = next((std for std in standards_data if std["id"] == sid), {})
             std_text = std_entry.get("text", "")
             evidences = std_entry.get("evidences", [])
             
+            # بناء المحتوى الإرشادي
             evidence_content = "\n".join(
                 f"{i+1}. {ev['description']} ({ev.get('file_name', 'ملف مرفق')})" 
                 if ev.get('type') == 'file' else 
                 f"{i+1}. {ev['description']} ({ev.get('link', 'رابط')})"
                 for i, ev in enumerate(evidences))
             
+            # إنشاء الprompt
             evaluation_prompt = f"""\
                 المهمة: تقييم أداء البرنامج وفق المعيار {sid}
 
@@ -224,19 +235,23 @@ def process_students_standard(uploaded_files, standards_data):
                 [التقييم] X
                 """
 
+            # توليد الاستجابة
             evaluation_response = generate_comment(evaluation_prompt)
             
+            # استخراج المكونات
             analysis = re.search(r'\[التحليل\](.*?)(\[نقاط القوة\]|$)', evaluation_response, re.DOTALL)
             strengths = extract_list('نقاط القوة', evaluation_response)
             weaknesses = extract_list('نقاط الضعف', evaluation_response)
             improvements = extract_list('التوصيات', evaluation_response)
             eval_match = re.search(r'\[التقييم\]\s*(\d+)', evaluation_response)
             
+            # معالجة التقييم
             eval_score = int(eval_match.group(1)) if eval_match else 0
             if eval_score > 0:
                 applicable_count += 1
                 total_sub_score += eval_score
             
+            # تسجيل النتائج
             sub_evaluations.append({
                 "substandard_id": sid,
                 "substandard_text": std_text,
@@ -251,6 +266,7 @@ def process_students_standard(uploaded_files, standards_data):
         except:
             print("error")
 
+    # التقييم الشامل
     overall = {
         "overall_comment": "لم يتم العثور على بيانات كافية للتقييم",
         "recommendations": {
@@ -262,6 +278,7 @@ def process_students_standard(uploaded_files, standards_data):
     
     if applicable_count > 0:
         try:
+            # تحضير سياق التقييم
             context = "\n\n".join(
                 f"المعيار: {sub['substandard_id']} ({sub['evaluation']}/4)\n"
                 f"التحليل: {sub['analysis']}\n"
@@ -270,6 +287,7 @@ def process_students_standard(uploaded_files, standards_data):
                 for sub in sub_evaluations
             )
 
+            # إنشاء الprompt الشامل
             overall_prompt = f"""\
 المهمة: إعداد تقرير تقييم نهائي لمعيار الطلاب
 
@@ -305,13 +323,16 @@ def process_students_standard(uploaded_files, standards_data):
 - ...
 """
 
+            # توليد الاستجابة الشاملة
             overall_response = generate_comment(overall_prompt)
             
+            # معالجة النتائج
             overall_comment = re.search(r'\[التحليل الشامل\](.*?)(\[النقاط الرئيسية\]|$)', overall_response, re.DOTALL)
             strengths = extract_list('القوة', overall_response)
             weaknesses = extract_list('الضعف', overall_response)
             improvements = extract_list('الخطة الاستراتيجية', overall_response)
 
+            # حساب النتائج الرقمية
             avg_score = total_sub_score / (applicable_count * 4)
             rating = (
                 "امتثال كامل" if avg_score >= 0.75 else
@@ -322,15 +343,15 @@ def process_students_standard(uploaded_files, standards_data):
 
             overall["overall_comment"] = f"{rating}\n\n{(overall_comment.group(1) if overall_comment else '').strip()}"
             overall["recommendations"] = {
+                "كامل" : overall_comment,
                 "نقاط القوة": strengths[:5],
                 "نقاط الضعف": weaknesses[:5],
                 "مجالات التحسين": improvements[:5]
             }
-            overall["overall"] = overall_response
-
         except Exception as e:
             app.logger.error(f"خطأ في التقييم الشامل: {str(e)}")
 
+    # حفظ النتائج
     try:
         analysis_dir = app.config['ANALYSIS_FOLDER']
         os.makedirs(analysis_dir, exist_ok=True)
@@ -350,7 +371,22 @@ def process_students_standard(uploaded_files, standards_data):
         "overall_evaluation": overall
     }
     
+
+
+def extract_list(section_name, text):
+    """دالة محسنة لاستخراج النقاط من الأقسام المحددة باستخدام التعابير النمطية"""
+    pattern = re.compile(
+        r'{}\s*:\n((?:\s*-\s*.*?\n|\s*\d+\.\s*.*?\n)+)'.format(re.escape(section_name)),
+        re.IGNORECASE | re.DOTALL
+    )
+    match = pattern.search(text)
+    if not match:
+        return []
     
+    items = re.findall(r'(?:-\s*|\d+\.\s*)(.*?)(?=\n\s*(?:-|\d+\.)|$)', match.group(1))
+    return [item.strip() for item in items if item.strip()]
+
+
 def login_with_password(email, password):
     url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_API_KEY}"
     payload = {"email": email, "password": password, "returnSecureToken": True}
@@ -520,12 +556,23 @@ TOTAL_STEPS = 4
 def generate_comment(prompt):
     response = client.chat.completions.create(
         model="gpt-4",
-        messages=[
-            {"role": "system", "content": "أنت مساعد أكاديمي خبير."},
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=1500
-    )
+    #     messages=[
+    #         {"role": "system", "content": "أنت مساعد أكاديمي خبير."},
+    #         {"role": "user", "content": prompt}
+    #     ],
+    #     max_tokens=1500
+    # )
+        messages=[{
+                "role": "system",
+                "content": "أنت خبير جودة أكاديمية معتمد. قدم إجابات دقيقة وموضوعية مع الالتزام بالتنسيق المطلوب."
+            }, {
+                "role": "user",
+                "content": prompt
+            }],
+            temperature=0.2,
+            max_tokens=2000,
+            top_p=0.9)
+    
     return response.choices[0].message.content.strip()
 
 
@@ -1334,6 +1381,7 @@ def step(step_number):
                     })
                 
                 uploaded_files = request.files.getlist('analysis_files')
+                # استدعاء الدالة المعدلة لتحليل معيار الطلاب
                 analysis_results = process_students_standard(uploaded_files, standards_data)
                 
                 data['standards'] = standards_data

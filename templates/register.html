@@ -123,6 +123,7 @@
               Swal.fire({
                 title: data.message,
                 icon: data.type,
+                confirmButtonText: "حسنًا",
               }).then(() => {
                 if (data.success) {
                   window.location.href = "/";
@@ -134,6 +135,7 @@
               Swal.fire({
                 title: "حدث خطأ أثناء إنشاء الحساب!",
                 icon: "error",
+                confirmButtonText: "حسنًا",
               });
             });
         });

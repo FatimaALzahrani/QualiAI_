@@ -89,6 +89,7 @@
               Swal.fire({
                 title: data.message,
                 icon: data.type,
+                confirmButtonText: "حسنًا",
               }).then(() => {
                 if (data.success) {
                   window.location.href = "/";

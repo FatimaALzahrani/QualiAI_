@@ -3,8 +3,10 @@ from flask import Flask, render_template,render_template_string, request, redire
 import firebase_admin
 from firebase_admin import credentials, auth, firestore
 import pandas as pd
+from fpdf import FPDF
 from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
+from PyPDF2 import PdfReader
 import numpy as np
 import os, uuid
 import json
@@ -23,8 +25,8 @@ from flask_session import Session
 app = Flask(__name__)
 app.secret_key = 'AIzaSyAr1hQK-pqmDlStxEScGJsXeLd3ZxabdhQ'
 
-
-client = OpenAI(api_key= "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")
+api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=api_key)
 
 model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
 
@@ -36,9 +38,6 @@ print("✅ Firebase Initialized Successfully!")
 UPLOAD_FOLDER = 'uploads'
 REPORTS_FOLDER = 'reports'
 EVIDENCE_FOLDER = 'evidences'
-app.config['ANALYSIS_FOLDER'] = os.path.join(os.getcwd(), 'analysis_results')
-if not os.path.exists(app.config['ANALYSIS_FOLDER']):
-    os.makedirs(app.config['ANALYSIS_FOLDER'])
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(REPORTS_FOLDER, exist_ok=True)
 os.makedirs(EVIDENCE_FOLDER, exist_ok=True) 
@@ -89,267 +88,146 @@ DEFAULT_STUDENT_STANDARDS = {
     }
 }
 
-
-def extract_list(section_title, text):
-    stop_words = ['نقاط القوة', 'نقاط الضعف', 'مجالات التحسين', 'التوصيات', 'الخطة الاستراتيجية', 'الضعف']
-    stop_words = [w for w in stop_words if w != section_title] 
-    stop_pattern = "|".join([re.escape(w) for w in stop_words])
-    
-    section_pattern = rf"(?:\[{section_title}\]|{section_title})\s*[:：]?\s*"
-
-    pattern = rf"{section_pattern}(.*?)(?=\n(?:{stop_pattern})|\Z)"
-    
-    match = re.search(pattern, text, re.DOTALL | re.IGNORECASE)
-    
-    if match:
-        section_text = match.group(1).strip()
-        
-        items = re.findall(r"(?:^-|\d+[.)])\s*(.+)", section_text, re.MULTILINE)
-        return [item.strip() for item in items if item.strip()]
-    
-    return []
-
-def process_students_standard(uploaded_files, standards_data):
-    if not uploaded_files or not any(f.filename for f in uploaded_files):
-        return {"error": "لم يتم رفع أي ملفات"}
+def process_uploaded_files(uploaded_files, standards_data):
+    """معالجة الملفات المرفوعة وتحليلها وربطها بالمحكات"""
+    if not uploaded_files or not any(file.filename for file in uploaded_files):
+        return []
     
     all_questions = []
     sources = []
     
     for file in uploaded_files:
-        if file and file.filename.endswith(('.xlsx', '.xls')):
-            try:
-                filename = secure_filename(file.filename)
-                upload_dir = app.config['UPLOAD_FOLDER']
-                os.makedirs(upload_dir, exist_ok=True)
-                filepath = os.path.join(upload_dir, filename)
-                file.save(filepath)
-                
-                df = pd.read_excel(filepath)
-                excluded_cols = ['الوقت', 'اسم الكلية', 'اسم البرنامج (القسم)', 'الجنس']
-                questions = [
-                    col for col in df.columns
-                    if col not in excluded_cols 
-                    and isinstance(col, str) 
-                    and len(col.strip()) > 10
-                ]
-                all_questions.extend(questions)
-                sources.extend([filename] * len(questions))
-            except Exception as e:
-                app.logger.error(f"خطأ في معالجة الملف {file.filename}: {str(e)}")
-                continue
-
+        if file and file.filename.endswith('.xlsx'):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+            
+            df = pd.read_excel(filepath)
+            excluded_cols = ['الوقت', 'اسم الكلية', 'اسم البرنامج (القسم)', 'الجنس']
+            questions = [col for col in df.columns if col not in excluded_cols and isinstance(col, str) and len(col.strip()) > 10]
+            
+            all_questions.extend(questions)
+            sources.extend([filename] * len(questions))
+    
     if not all_questions:
-        return {"error": "لم يتم العثور على أسئلة صالحة في الملفات المرفوعة"}
+        return []
     
-    try:
-        std_texts = [std["text"] for std in standards_data]
-        std_ids = [std["id"] for std in standards_data]
-        
-        q_emb = model.encode(all_questions, convert_to_tensor=True)
-        std_emb = model.encode(std_texts, convert_to_tensor=True)
-        cosine_scores = util.cos_sim(q_emb, std_emb)
-        
-        students_map = {sid: [] for sid in std_ids}
-        for i, question in enumerate(all_questions):
-            best_score = float(cosine_scores[i].max())
-            best_index = int(cosine_scores[i].argmax())
-            if best_score > 0.3:
-                matched_sid = std_ids[best_index]
-                students_map[matched_sid].append({
-                    "question": question,
-                    "score": best_score,
-                    "source": sources[i]
-                })
-    except Exception as e:
-        return {"error": "حدث خطأ فني أثناء معالجة البيانات"}
-
-    sub_evaluations = []
-    total_sub_score = 0
-    applicable_count = 0
+    std_texts = [std["text"] for std in standards_data]
+    std_ids = [std["id"] for std in standards_data]
     
-    for sid, questions in students_map.items():
+    q_emb = model.encode(all_questions, convert_to_tensor=True)
+    std_emb = model.encode(std_texts, convert_to_tensor=True)
+    cosine_scores = util.cos_sim(q_emb, std_emb)
+    
+    standard_questions_map = {sid: [] for sid in std_ids}
+    
+    for i, question in enumerate(all_questions):
+        best_score, best_index = float(cosine_scores[i].max()), int(cosine_scores[i].argmax())
+        matched_sid = std_ids[best_index] if best_score > 0.3 else "غير مرتبط"
+        sentiment = TextBlob(question).sentiment.polarity
+        
+        if matched_sid != "غير مرتبط":
+            standard_questions_map[matched_sid].append({
+                "question": question,
+                "score": float(best_score),
+                "sentiment": float(sentiment),
+                "source": sources[i]
+            })
+    
+    analysis_results = []
+    for sid, questions in standard_questions_map.items():
         if not questions:
             continue
-        try:
-            std_entry = next((std for std in standards_data if std["id"] == sid), {})
-            std_text = std_entry.get("text", "")
-            evidences = std_entry.get("evidences", [])
-            
-            evidence_content = "\n".join(
-                f"{i+1}. {ev['description']} ({ev.get('file_name', 'ملف مرفق')})" 
-                if ev.get('type') == 'file' else 
-                f"{i+1}. {ev['description']} ({ev.get('link', 'رابط')})"
-                for i, ev in enumerate(evidences))
-            
-            evaluation_prompt = f"""\
-                المهمة: تقييم أداء البرنامج وفق المعيار {sid}
-
-                نص المعيار:
-                {std_text}
-
-                البيانات المستخلصة:
-                {chr(10).join(q['question'] for q in questions)}
-
-                الشواهد الداعمة:
-                {evidence_content}
-
-                المطلوب:
-                1. تحليل مفصل (200-300 كلمة) يركز على:
-                - مدى توافق الممارسات مع متطلبات المعيار
-                - جودة الأدلة الداعمة
-                - الثغرات الرئيسية
-
-                2. تحديد العناصر التالية:
-                - نقاط القوة (2-3 نقاط كحد أقصى)
-                - نقاط الضعف (2-3 نقاط كحد أقصى)
-                - توصيات التحسين (3 توصيات عملية)
-
-                3. التقييم النهائي حسب المقياس:
-                0 = غير مطبق
-                1 = امتثال متدنٍ (<25%)
-                2 = امتثال جزئي (25-50%)
-                3 = امتثال كبير (51-75%)
-                4 = امتثال كامل (>75%)
-
-                التنسيق المطلوب:
-                [التحليل]
-                ...
-                [نقاط القوة]
-                - ...
-                [نقاط الضعف] 
-                - ...
-                [التوصيات]
-                - ...
-                [التقييم] X
-                """
-
-            evaluation_response = generate_comment(evaluation_prompt)
-            
-            analysis = re.search(r'\[التحليل\](.*?)(\[نقاط القوة\]|$)', evaluation_response, re.DOTALL)
-            strengths = extract_list('نقاط القوة', evaluation_response)
-            weaknesses = extract_list('نقاط الضعف', evaluation_response)
-            improvements = extract_list('التوصيات', evaluation_response)
-            eval_match = re.search(r'\[التقييم\]\s*(\d+)', evaluation_response)
-            
-            eval_score = int(eval_match.group(1)) if eval_match else 0
-            if eval_score > 0:
-                applicable_count += 1
-                total_sub_score += eval_score
-            
-            sub_evaluations.append({
-                "substandard_id": sid,
-                "substandard_text": std_text,
-                "questions": questions,
-                "analysis": analysis.group(1).strip() if analysis else "",
-                "strengths": strengths[:3],
-                "weaknesses": weaknesses[:3],
-                "improvements": improvements[:3],
-                "evaluation": eval_score,
-                "evidences": evidences
-            })
-        except:
-            print("error")
-
-    overall = {
-        "overall_comment": "لم يتم العثور على بيانات كافية للتقييم",
-        "recommendations": {
-            "نقاط القوة": [],
-            "نقاط الضعف": [],
-            "مجالات التحسين": []
-        }
-    }
-    
-    if applicable_count > 0:
-        try:
-            context = "\n\n".join(
-                f"المعيار: {sub['substandard_id']} ({sub['evaluation']}/4)\n"
-                f"التحليل: {sub['analysis']}\n"
-                f"النقاط الإيجابية: {', '.join(sub['strengths'])}\n"
-                f"المجالات التحسينية: {', '.join(sub['improvements'])}"
-                for sub in sub_evaluations
-            )
-
-            overall_prompt = f"""\
-المهمة: إعداد تقرير تقييم نهائي لمعيار الطلاب
-
-السياق:
-{context}
-
-المتطلبات:
-1. صياغة تحليل شامل (300-400 كلمة) يشمل:
-   - ملخص للأداء العام
-   - العلاقات بين النتائج الفرعية
-   - التحديات المشتركة
-   - الفرص الاستراتيجية
-
-2. تحديد العناصر الرئيسية:
-   - 3-5 نقاط قوة جوهرية
-   - 3-5 مجالات تحسين حرجة
-   - 5 توصيات استراتيجية ذات أولوية
-
-3. صياغة احترافية تناسب:
-   - صناع القرار
-   - جهات الاعتماد
-   - لجان التطوير الأكاديمي
-
-التنسيق المطلوب:
-[التحليل الشامل]
-...
-[النقاط الرئيسية]
-القوة:
-- ...
-الضعف:
-- ...
-[الخطة الاستراتيجية]
-- ...
-"""
-
-            overall_response = generate_comment(overall_prompt)
-            
-            overall_comment = re.search(r'\[التحليل الشامل\](.*?)(\[النقاط الرئيسية\]|$)', overall_response, re.DOTALL)
-            strengths = extract_list('القوة', overall_response)
-            weaknesses = extract_list('الضعف', overall_response)
-            improvements = extract_list('الخطة الاستراتيجية', overall_response)
-
-            avg_score = total_sub_score / (applicable_count * 4)
-            rating = (
-                "امتثال كامل" if avg_score >= 0.75 else
-                "امتثال كبير" if avg_score >= 0.5 else
-                "امتثال جزئي" if avg_score >= 0.25 else
-                "امتثال متدنٍ"
-            )
-
-            overall["overall_comment"] = f"{rating}\n\n{(overall_comment.group(1) if overall_comment else '').strip()}"
-            overall["recommendations"] = {
-                "نقاط القوة": strengths[:5],
-                "نقاط الضعف": weaknesses[:5],
-                "مجالات التحسين": improvements[:5]
-            }
-            overall["overall"] = overall_response
-
-        except Exception as e:
-            app.logger.error(f"خطأ في التقييم الشامل: {str(e)}")
-
-    try:
-        analysis_dir = app.config['ANALYSIS_FOLDER']
-        os.makedirs(analysis_dir, exist_ok=True)
-        save_path = os.path.join(analysis_dir, 'students_evaluation.json')
         
-        with open(save_path, 'w', encoding='utf-8') as f:
-            json.dump({
-                "sub_evaluations": sub_evaluations,
-                "overall_evaluation": overall
-            }, f, ensure_ascii=False, indent=4)
-    except Exception as e:
-        app.logger.error(f"خطأ في حفظ النتائج: {str(e)}")
-        return {"error": "حدث خطأ أثناء حفظ النتائج"}
+        std_text = next((std["text"] for std in standards_data if std["id"] == sid), "")
+        
+        evidences = next((std["evidences"] for std in standards_data if std["id"] == sid), [])
+        evidence_citations = ""
+        
+        if evidences:
+            evidence_citations = "\n\nالشواهد المرتبطة بهذا المحك:\n"
+            for i, evidence in enumerate(evidences):
+                if evidence["type"] == "file":
+                    evidence_citations += f"{i+1}. {evidence['description']} (ملف: {evidence.get('file_name', 'غير محدد')})\n"
+                else:
+                    evidence_citations += f"{i+1}. {evidence['description']} (رابط: {evidence.get('link', 'غير محدد')})\n"
+        
+        combined = "\n".join([q["question"] for q in questions])
+        avg_score = sum(q["score"] for q in questions) / len(questions)
+        avg_sent = sum(q["sentiment"] for q in questions) / len(questions)
+        
+        prompt = f"""استنادًا إلى الأسئلة التالية:
+{combined}
 
-    return {
-        "sub_evaluations": sub_evaluations,
-        "overall_evaluation": overall
-    }
+والتي تعكس المعيار {sid}: "{std_text}"
+بمتوسط درجة تشابه {avg_score:.2f}، يرجى توليد ملخص أكاديمي مختصر لا يزيد عن 300 كلمة يعكس مدى تحقق هذا المعيار في البرنامج.
+{evidence_citations}
+
+ثم في نهاية الملخص، قيّم مدى تحقق هذا المعيار من 0 إلى 4 حسب الآتي:
+0 = لا ينطبق، 1 = تحقق جزئي جدًا، 2 = تحقق جزئي، 3 = تحقق كبير، 4 = تحقق كامل.
+رجاءً اكتب فقط الرقم بعد كلمة: "التقييم: " في سطر منفصل.
+"""
+        
+        full_response = generate_comment(prompt)
+        match = re.search(r"التقييم\s*[:：]?\s*(\d+)", full_response)
+        score = int(match.group(1)) if match else 0
+        summary = re.sub(r"\s*التقييم\s*[:：]?\s*\d+", "", full_response).strip()
+        
+        analysis_results.append({
+            "standard_id": sid,
+            "standard_text": std_text,
+            "questions": questions,
+            "summary": summary,
+            "evaluation": score,
+            "evidences": evidences
+        })
     
+    if analysis_results:
+        general_prompt = "بناءً على نتائج تحليل المعايير التالية:\n"
+        for result in analysis_results:
+            general_prompt += f"\nالمعيار {result['standard_id']}:\n{result['standard_text']}\nالتقييم: {result['evaluation']}\n"
+        
+        general_prompt += "\nيرجى توليد ملخص عام لا يزيد عن 200 كلمة يحتوي على: نقاط القوة - نقاط الضعف - أبرز فرص التحسين، بشكل واضح ومنظم."
+        general_summary = generate_comment(general_prompt)
+        
+        strengths = []
+        weaknesses = []
+        improvements = []
+        
+        strength_match = re.search(r"نقاط القوة[:\n]+(.*?)(?=نقاط الضعف|$)", general_summary, re.DOTALL)
+        if strength_match:
+            strengths = [s.strip() for s in strength_match.group(1).strip().split("\n") if s.strip()]
+        
+        weakness_match = re.search(r"نقاط الضعف[:\n]+(.*?)(?=فرص التحسين|مجالات التحسين|توصيات التطوير|$)", general_summary, re.DOTALL)
+        if weakness_match:
+            weaknesses = [w.strip() for w in weakness_match.group(1).strip().split("\n") if w.strip()]
+        
+        improvement_match = re.search(r"(فرص التحسين|مجالات التحسين|توصيات التطوير)[:\n]+(.*?)(?=$)", general_summary, re.DOTALL)
+        if improvement_match:
+            improvements = [i.strip() for i in improvement_match.group(2).strip().split("\n") if i.strip()]
+        
+        recommendations = {
+            "نقاط القوة": strengths,
+            "نقاط الضعف": weaknesses,
+            "مجالات التحسين": improvements
+        }
+        
+        total_score = sum(result["evaluation"] for result in analysis_results)
+        max_possible_score = 4 * len(analysis_results)
+        percentage = (total_score / max_possible_score) * 100 if max_possible_score > 0 else 0
+        
+        overall_evaluation = {
+            "total_score": total_score,
+            "max_score": max_possible_score,
+            "percentage": percentage,
+            "general_summary": general_summary,
+            "recommendations": recommendations
+        }
+        
+        for result in analysis_results:
+            result["overall_evaluation"] = overall_evaluation
+    
+    return analysis_results
     
 def login_with_password(email, password):
     url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_API_KEY}"
@@ -524,7 +402,7 @@ def generate_comment(prompt):
             {"role": "system", "content": "أنت مساعد أكاديمي خبير."},
             {"role": "user", "content": prompt}
         ],
-        max_tokens=1500
+        max_tokens=1
     )
     return response.choices[0].message.content.strip()
 
@@ -1334,14 +1212,14 @@ def step(step_number):
                     })
                 
                 uploaded_files = request.files.getlist('analysis_files')
-                analysis_results = process_students_standard(uploaded_files, standards_data)
+                analysis_results = process_uploaded_files(uploaded_files, standards_data)
                 
                 data['standards'] = standards_data
                 data['analysis_results'] = analysis_results
-                                        
+                                
             except Exception as e:
                 return jsonify({"error": f"حدث خطأ أثناء معالجة البيانات: {str(e)}"})
-
+                
         session['data'] = data
         session['files'] = files_data
 
@@ -1550,7 +1428,6 @@ def update_report(report_id):
     faculty_classify = data.get("faculty_classify", {"انتظام": {}, "عن بعد": {}})
 
     for field, value in form_data.items():
-        print(field , ' ', value)
         keys = field.split("[")
         keys = [k.strip("]") for k in keys]
 
@@ -1653,7 +1530,6 @@ def update_report(report_id):
     data["recommendations"] = recommendations
 
     data = {**data, **non_table_data}
-    print("data ",data)
 
     try:
         doc_ref.update({

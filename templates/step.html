@@ -34,7 +34,7 @@
       </h4>
     </div>
     <div class="card-body">
-      <form method="POST" enctype="multipart/form-data">
+      <form id="criteria-form" method="POST" enctype="multipart/form-data">
         {% if step_number == 1 %}
 
         <div class="form-group">
@@ -49,7 +49,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="institution">المؤسسة</label>
+          <label for="institution">الجامعة</label>
           <input
             type="text"
             class="form-control"
@@ -92,7 +92,7 @@
             value="{{ data.get('program', '') }}"
           />
         </div>
-          <!-- 
+        <!-- 
         <div class="form-group">
           <label for="reportDate">تاريخ إعداد التقرير</label>
           <input
@@ -227,8 +227,7 @@
                     <th>إجمالي الساعات المعتمدة</th>
                   </tr>
                 </thead>
-                <tbody>
-                </tbody>
+                <tbody></tbody>
               </table>
             </div>
             <div class="form-group col-md-4">
@@ -373,14 +372,16 @@
           <table id="comparisonTable">
             <thead>
               <tr>
+                <th>م</th>
                 <th>الجهة</th>
                 <th>سبب الاختيار</th>
-                <th>إجراء</th>
+                <th>حذف</th>
               </tr>
             </thead>
             <tbody>
-              {% for comp in comparisons %}
+              {% for comp in data.comparison_entities %}
               <tr>
+                <td>{{ loop.index }}</td>
                 <td>
                   <input
                     type="text"
@@ -400,8 +401,8 @@
                 <td>
                   <button
                     type="button"
-                    class="removeRow"
-                    onclick="removeRow(this)"
+                    class="delete-btn"
+                    onclick="deleteRow(this)"
                   >
                     ❌
                   </button>
@@ -412,46 +413,95 @@
           </table>
 
           <div class="button-container">
-            <button type="button" class="button" onclick="addRow()">
-              إضافة صف
+            <button type="button" class="button" onclick="addRowComparison()">
+              إضافة جهة
             </button>
           </div>
 
-          <h3 class="card-title mt-4">2.2 ملخص مؤشرات الأداء الرئيسة والمقارنة المرجعية</h3>
+          <h3 class="card-title mt-4">
+            2.2 ملخص مؤشرات الأداء الرئيسة والمقارنة المرجعية
+          </h3>
 
           <table id="kpiTable">
-              <thead>
-                  <tr>
-                      <th>م</th>
-                      <th>مؤشر الأداء</th>
-                      <th>مستوى الأداء الفعلي</th>
-                      <th>مستوى الأداء المستهدف</th>
-                      <th>مستوى الأداء المرجعي الداخلي</th>
-                      <th>مستوى الأداء المرجعي الخارجي</th>
-                      <th>إجراء</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {% for kpi in data.kpis_row %}
-                  <tr>
-                      <td>{{ loop.index }}</td>
-                      <td><input type="text" name="indicator[]" value="{{ kpi.indicator }}" required /></td>
-                      <td><input type="number" name="actual[]" value="{{ kpi.actual }}" step="0.01" required /></td>
-                      <td><input type="number" name="target[]" value="{{ kpi.target }}" step="0.01" required /></td>
-                      <td><input type="number" name="internal_ref[]" value="{{ kpi.internal_ref }}" step="0.01" required /></td>
-                      <td><input type="number" name="external_ref[]" value="{{ kpi.external_ref }}" step="0.01" /></td>
-                      <td>
-                          <button type="button" class="x" onclick="removeRowKpi(this)">❌</button>
-                      </td>
-                  </tr>
-                  {% endfor %}
-              </tbody>
+            <thead>
+              <tr>
+                <th>م</th>
+                <th width="25%">مؤشر الأداء</th>
+                <th>مستوى الأداء الفعلي</th>
+                <th>مستوى الأداء المستهدف</th>
+                <th>مستوى الأداء المرجعي الداخلي</th>
+                <th>مستوى الأداء المرجعي الخارجي (إن وجد)</th>
+                <th>حذف</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for kpi in data.kpis_row %}
+              <tr>
+                <td>{{ loop.index }}</td>
+                <td>
+                  <input
+                    type="text"
+                    name="indicator[]"
+                    value="{{ kpi.indicator }}"
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="actual[]"
+                    value="{{ kpi.actual }}"
+                    step="0.01"
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="target[]"
+                    value="{{ kpi.target }}"
+                    step="0.01"
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="internal_ref[]"
+                    value="{{ kpi.internal_ref }}"
+                    step="0.01"
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="external_ref[]"
+                    value="{{ kpi.external_ref }}"
+                    step="0.01"
+                  />
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="delete-btn"
+                    onclick="deleteRow(this)"
+                  >
+                    ❌
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
           </table>
-          
+
           <div class="btn-container">
-              <button type="button" class="button" onclick="addRowKpi()">إضافة معيار جديد</button>
+            <button type="button" class="button" onclick="addRowKpi()">
+              إضافة مؤشر جديد
+            </button>
           </div>
-          
+        </div>
+
         {% elif step_number == 4 %}
         <div class="stepper-container">
           <div class="steps">
@@ -467,7 +517,122 @@
                 </div>
               </div>
               <div class="step-content">
-                <p class="content-title"> الملفات المطلوبة:</p>
+                {% if 'الطلاب' in standard_title %}
+                <div class="container mt-4">
+                  <h2 class="text-center mb-4">معيار الطلاب</h2>
+
+                  <div class="card shadow">
+                    <div class="card-body">
+                      <div class="row mb-4">
+                        <div class="col-12">
+                          <div class="alert alert-info">
+                            <h5>تعليمات:</h5>
+                            <ul>
+                              <li>
+                                يمكنك إضافة أو حذف محكات حسب احتياجات برنامجك.
+                              </li>
+                              <li>المحكات الإجبارية لا يمكن حذفها.</li>
+                              <li>
+                                يمكنك إضافة شواهد وأدلة لكل محك (ملفات أو
+                                روابط).
+                              </li>
+                              <li>
+                                يمكنك رفع ملفات استبيانات Excel لتحليلها وربطها
+                                بالمحكات.
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row mb-4">
+                        <div class="col-12">
+                          <p class="content-title fw-bold fs-5">
+                            محكات معيار الطلاب:
+                          </p>
+
+                          <div id="student-standards-container"></div>
+
+                          <button
+                            type="button"
+                            class="btn btn-success mt-3"
+                            onclick="addStandard()"
+                          >
+                            إضافة محك جديد
+                          </button>
+                        </div>
+                      </div>
+
+                      <div class="row mb-4">
+                        <div class="col-12">
+                          <div class="card border-primary">
+                            <div class="card-header bg-primary text-white">
+                              <h5 class="mb-0">
+                                تحليل الملفات وربطها بالمحكات
+                              </h5>
+                            </div>
+                            <div class="card-body">
+                              <div class="mb-3">
+                                <label for="analysis-files" class="form-label"
+                                  >رفع ملفات للتحليل (Excel):</label
+                                >
+                                <input
+                                  type="file"
+                                  class="form-control"
+                                  id="analysis-files"
+                                  name="analysis_files"
+                                  multiple
+                                  accept=".xlsx, .xls"
+                                />
+                                <div class="form-text">
+                                  يمكنك رفع ملفات استبيانات Excel لتحليلها
+                                  وربطها تلقائيًا بالمحكات المناسبة.
+                                </div>
+                              </div>
+
+                              <div class="mb-3">
+                                <label class="form-label"
+                                  >الملفات المحددة:</label
+                                >
+                                <ul id="file-list" class="list-group"></ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="step-controls">
+                        {% if loop.index > 1 %}
+                        <button
+                          type="button"
+                          class="btn prev-btn"
+                          onclick="toggleStep({{ loop.index }}, 'prev')"
+                        >
+                          السابق
+                        </button>
+                        {% endif %} {% if loop.index < standards_files|length %}
+                        <button
+                          type="button"
+                          class="btn next-btn"
+                          onclick="toggleStep({{ loop.index }}, 'next')"
+                        >
+                          التالي
+                        </button>
+                        {% else %}
+                        <button
+                          type="button"
+                          class="btn close-btn"
+                          onclick="toggleStep({{ loop.index }}, 'close')"
+                        >
+                          إغلاق
+                        </button>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {%else%}
+                <p class="content-title">الملفات المطلوبة:</p>
                 <ul class="content-list">
                   {% for f in required_files %}
                   <li>{{ f }}</li>
@@ -513,13 +678,15 @@
                   >
                     إغلاق
                   </button>
-                  {% endif %}
+                  {% endif %} {%endif%}
                 </div>
               </div>
             </div>
             {% endfor %}
           </div>
         </div>
+
+        <script src="{{ url_for('static', filename='criteria_management.js') }}"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
         <script>
@@ -532,7 +699,6 @@
               } else if (action === "prev") {
                 targetStep = currentStep.prev(".step");
               } else if (action === "close") {
-
                 currentStep.find(".step-content").slideUp(300, function () {
                   $(this).addClass("minimized");
                 });

@@ -17,8 +17,8 @@
     <header>
       <input
         type="text"
-        id="institution"
-        name="institution"
+        id="title"
+        name="title"
         value="{{ report.get('title', '') }}"
       />
     </header>
@@ -316,7 +316,7 @@
 
           <label for="program_branches">الفروع التي يقدمها البرنامج:</label>
           <textarea name="program_branches" id="program_branches" rows="3">
-{{ report.get('program_branches', '') }}</textarea
+{{ report.get('program_progress', '') }}</textarea
           >
         </section>
         <section

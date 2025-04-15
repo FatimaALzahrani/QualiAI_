@@ -48,6 +48,52 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
+      function addRowComparison() {
+        let table = document
+          .getElementById("comparisonTable")
+          .getElementsByTagName("tbody")[0];
+        let newRow = table.insertRow();
+        newRow.innerHTML = `
+              <td></td>
+              <td><input type="text" name="entity[]" placeholder="أدخل الجهة" required /></td>
+              <td><input type="text" name="reason[]" placeholder="أدخل سبب الاختيار" required /></td>
+              <td><button type="button" class="delete-btn" onclick="deleteRow(this)">❌</button></td>
+            `;
+        updateRowNumbers("comparisonTable");
+      }
+
+      function addRowKpi() {
+        let table = document
+          .getElementById("kpiTable")
+          .getElementsByTagName("tbody")[0];
+        let newRow = table.insertRow();
+        newRow.innerHTML = `
+              <td></td>
+              <td><input type="text" name="indicator[]" placeholder="أدخل مؤشر الأداء" required /></td>
+              <td><input type="number" name="actual[]" placeholder="0.00" step="0.01" required /></td>
+              <td><input type="number" name="target[]" placeholder="0.00" step="0.01" required /></td>
+              <td><input type="number" name="internal_ref[]" placeholder="0.00" step="0.01" required /></td>
+              <td><input type="number" name="external_ref[]" placeholder="0.00" step="0.01" /></td>
+              <td><button type="button" class="delete-btn" onclick="deleteRow(this)">❌</button></td>
+            `;
+        updateRowNumbers("kpiTable");
+      }
+
+      function deleteRow(button) {
+        let row = button.parentElement.parentElement;
+        row.remove();
+        updateRowNumbers("comparisonTable");
+        updateRowNumbers("kpiTable");
+      }
+
+      function updateRowNumbers(tableId) {
+        let rows = document.querySelectorAll(`#${tableId} tbody tr`);
+        rows.forEach((row, index) => {
+          row.cells[0].textContent = index + 1;
+        });
+      }
+    </script>
+    <script>
       document.addEventListener("DOMContentLoaded", function () {
         function populateTable(count, tableId, prefix) {
           var tableBody = document
@@ -102,17 +148,16 @@
       });
 
       function addRow() {
-        let table = document
+        const table = document
           .getElementById("comparisonTable")
           .getElementsByTagName("tbody")[0];
-        let newRow = table.insertRow();
+        const newRow = table.insertRow();
         newRow.innerHTML = `
-            <td><input type="text" name="entity[]" placeholder="اسم الجهة" required></td>
-            <td><input type="text" name="reason[]" placeholder="سبب الاختيار" required></td>
-            <td><button type="button" class="removeRow" onclick="removeRow(this)">❌</button></td>
+          <td><input type="text" name="entity[]" required /></td>
+          <td><input type="text" name="reason[]" required /></td>
+          <td><button type="button" class="removeRow" onclick="removeRow(this)">❌</button></td>
         `;
       }
-
       function removeRow(button) {
         let row = button.parentNode.parentNode;
         row.parentNode.removeChild(row);

@@ -37,7 +37,7 @@
         >
           <div class="institution-data" style="flex: 1; min-width: 250px">
             <h3 style="color: var(--accent-color)">البيانات الأساسية</h3>
-            <p><strong>المؤسسة:</strong> {{data.get('institution', '')}}</p>
+            <p><strong>الجامعة:</strong> {{data.get('institution', '')}}</p>
             <p><strong>الكلية:</strong> {{data.get('college', '')}}</p>
             <p><strong>القسم العلمي:</strong> {{data.get('department', '')}}</p>
             <p><strong>البرنامج:</strong>{{data.get('program', '')}}</p>
@@ -1264,6 +1264,228 @@
       <section id="attachments">
         <h2>المرفقات والتوصيات</h2>
       </section> -->
+      
+      <section
+        id="self-study"
+        style="
+          margin: 2rem 0;
+          padding: 1.5rem;
+          background: #fdfdfd;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+        "
+      >
+<div class="card p-4 mb-4 shadow-sm" style="background: #f9f9f9; border: 1px solid #ccc; border-radius: 12px;">
+  <h2
+  style="
+    border-left: 5px solid var(--accent-color, #e74c3c);
+    padding-left: 1rem;
+    color: var(--primary-color, #2c3e50);
+  "
+>
+ 3. التقويم الذاتي وفقًا لمعايير الإعتماد
+</h2>
+
+<div
+  class="card"
+  style="
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  "
+>
+  <h3 style="color: var(--accent-color, #e74c3c);font-size:24px;padding:5px">
+   المعيار الثالث : الطلاب
+  </h3>
+  
+      <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle">
+          <thead class="table-light">
+            <tr>
+              <th rowspan="2">رقم المعيار الفرعي</th>
+              <th rowspan="2">وصف المعيار</th>
+              <th rowspan="2">لا ينطبق</th>
+              <th colspan="2">غير مرضي</th>
+              <th colspan="2">مرضي</th>
+            </tr>
+            <tr>
+              <th>امتثال متدني</th>
+              <th>امتثال جزئي</th>
+              <th>امتثال كبير</th>
+              <th>امتثال كامل</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for result in data.analysis_results.sub_evaluations %}
+              {% set total = result.questions | map(attribute='score') | list | sum %}
+              {% set count = result.questions | length %}
+              {% set avg = (total / count) if count > 0 else 0 %}
+              <tr>
+                <td>{{ result.substandard_id }}</td>
+                <td class="text-end">{{ result.substandard_text }}</td>
+                <td>{% if avg == 0 %}✅{% endif %}</td>
+                <td>{% if 0 < avg < 0.25 %}✅{% endif %}</td>
+                <td>{% if avg >= 0.25 and avg < 0.51 %}✅{% endif %}</td>
+                <td>{% if avg >= 0.51 and avg < 0.60 %}✅{% endif %}</td>
+                <td>{% if avg >= 0.60 %}✅{% endif %}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% set ns = namespace(total_score=0, applicable_count=0) %}
+      {% set max_possible_score = 4 %}
+      
+      {% for result in data.analysis_results.sub_evaluations %}
+        {% set total = result.questions | map(attribute='score') | list | sum %}
+        {% set count = result.questions | length %}
+        {% set avg = (total / count) if count > 0 else 0 %}
+      
+        {% if avg > 0 %}
+          {% set ns.applicable_count = ns.applicable_count + 1 %}
+        {% endif %}
+      
+        {% if avg == 0 %}
+          {% set score_value = 0 %}
+        {% elif avg <= 0.25 %}
+          {% set score_value = 1 %}
+        {% elif avg > 0.25 and avg < 0.51 %}
+          {% set score_value = 2 %}
+        {% elif avg >= 0.51 and avg < 0.60 %}
+          {% set score_value = 3 %}
+        {% elif avg >= 0.60 %}
+          {% set score_value = 4 %}
+        {% endif %}
+      
+        {% set ns.total_score = ns.total_score + score_value %}
+      {% endfor %}
+      
+      {% set avg_score = (ns.total_score / (ns.applicable_count * max_possible_score)) if ns.applicable_count > 0 else 0 %}
+      <div class="mt-4">
+        <h2 class="mt-5" > التقييم العام للمعيار:</h2>
+        <table class="table table-bordered text-center align-middle">
+          <thead class="table-light">
+            <tr>
+              <th> مجموع تقييم المحكات</th>
+              <th>عدد المحكات المنطبقة</th>
+              <th>متوسط تقييم المعيار</th>
+              <th>درجة التقويم الإجمالي</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ ns.total_score }}</td>
+              <td>{{ ns.applicable_count }}</td>
+              <td>{{ '%.2f' % avg_score }}</td>
+              <td>
+                {% if avg_score < 0.25 %}
+                  ✅ امتثال متدني
+                {% elif avg_score < 0.51 %}
+                  ✅ امتثال جزئي
+                {% elif avg_score < 0.60 %}
+                  ✅ امتثال كبير
+                {% else %}
+                  ✅ امتثال كامل
+                {% endif %}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      
+  
+  
+  {% set all_questions = [] %}
+  {% for result in data.analysis_results.sub_evaluations %}
+    {% if result.questions is defined %}
+      {% set all_questions = all_questions + result.questions %}
+    {% endif %}
+  {% endfor %}
+  {% set total_score = all_questions | map(attribute='score') | list | sum %}
+  {% set total_questions = all_questions | length %}
+  {% set max_score = total_questions * 4 %}
+  {% set percentage = (total_score / max_score * 100) if max_score > 0 else 0 %}
+  {% set avg_score = (total_score / total_questions) if total_questions > 0 else 0 %}
+  <hr/>
+  <h2 class="mt-5"> التعليق العام على النتائج</h2>
+
+  <p>
+
+  </p>
+  
+  <div class="my-4">
+    <div class="p-3 bg-light rounded border">
+      {{ data.analysis_results.overall_evaluation.overall_comment | safe }}
+    </div>
+  </div>
+  <hr/>
+  <h2 class="mt-5"> التقويم العام لجودة المعيار</h2>
+  <div class="row gy-3">
+    <div class="col-md-4">
+      <div class="card border-success h-100">
+        <div class="card-header bg-success text-white">
+          <h3 class="mb-0">أبرز جوانب القوة</h3>
+        </div>
+        <div class="card-body">
+          <ul class="list-unstyled mb-0">
+            {% if data.analysis_results.overall_evaluation.recommendations is defined and data.analysis_results.overall_evaluation.recommendations['نقاط القوة'] is defined %}
+              {% for item in data.analysis_results.overall_evaluation.recommendations['نقاط القوة'] %}
+                <li>{{ item }}</li>
+              {% endfor %}
+            {% else %}
+              <li>لا توجد توصيات لنقاط القوة</li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <div class="col-md-4">
+      <div class="card border-danger h-100">
+        <div class="card-header bg-danger text-white">
+          <h3 class="mb-0">أبرز جوانب الضعف</h3>
+        </div>
+        <div class="card-body">
+          <ul class="list-unstyled mb-0">
+            {% if data.analysis_results.overall_evaluation.recommendations is defined and data.analysis_results.overall_evaluation.recommendations['نقاط الضعف'] is defined %}
+              {% for item in data.analysis_results.overall_evaluation.recommendations['نقاط الضعف'] %}
+                <li>{{ item }}</li>
+              {% endfor %}
+            {% else %}
+              <li>لا توجد توصيات لنقاط الضعف</li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <div class="col-md-4">
+      <div class="card border-warning h-100">
+        <div class="card-header bg-warning text-dark">
+          <h3 class="mb-0">أبرز مجالات التحسين</h3>
+        </div>
+        <div class="card-body">
+          <ul class="list-unstyled mb-0">
+            {% if data.analysis_results.overall_evaluation.recommendations is defined and data.analysis_results.overall_evaluation.recommendations['مجالات التحسين'] is defined %}
+              {% for item in data.analysis_results.overall_evaluation.recommendations['مجالات التحسين'] %}
+                <li>{{ item }}</li>
+              {% endfor %}
+            {% else %}
+              <li>لا توجد توصيات لمجالات التحسين</li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+        </div>
+      </section>
 
       <div class="button-container">
         <a href="{{ url_for('edit_report', report_id=report_id) }}" class="btn"

@@ -435,3 +435,20 @@ textarea {
 textarea {
   resize: vertical;
 }
+
+h2 {
+  margin: 8px;
+}
+
+hr {
+  margin: 10px;
+}
+
+ul {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+h3 {
+  color: goldenrod;
+}
