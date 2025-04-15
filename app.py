@@ -17,15 +17,16 @@ from sentence_transformers import SentenceTransformer, util
 import pandas as pd
 from textblob import TextBlob
 from openai import OpenAI
+import openai
 import re
 from flask_session import Session
 
 app = Flask(__name__)
 app.secret_key = 'AIzaSyAr1hQK-pqmDlStxEScGJsXeLd3ZxabdhQ'
 
-
 api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=api_key)
+# client = OpenAI(api_key=OPENAI_API_KEY)
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
 
