@@ -10,3 +10,4 @@ plotly
 openai
 textblob
 sentence-transformers
+flask_session
