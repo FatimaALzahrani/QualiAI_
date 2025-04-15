@@ -25,8 +25,8 @@ from flask_session import Session
 app = Flask(__name__)
 app.secret_key = 'AIzaSyAr1hQK-pqmDlStxEScGJsXeLd3ZxabdhQ'
 
-
-client = OpenAI(api_key= "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")
+api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=api_key)
 
 model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
 
