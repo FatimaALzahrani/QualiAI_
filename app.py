@@ -28,7 +28,8 @@ api_key = os.getenv("OPENAI_API_KEY")
 # client = OpenAI(api_key=OPENAI_API_KEY)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+# model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 cred = credentials.Certificate("credentials.json")
 firebase_admin.initialize_app(cred)
